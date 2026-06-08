@@ -14,13 +14,251 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      avaliacoes_cha: {
+        Row: {
+          atitudes: number
+          conhecimentos: number
+          created_at: string
+          habilidades: number
+          id: string
+          oportunidades: string[] | null
+          pontos_fortes: string[] | null
+          pontuacao_geral: number
+          respostas: Json
+          user_id: string
+        }
+        Insert: {
+          atitudes: number
+          conhecimentos: number
+          created_at?: string
+          habilidades: number
+          id?: string
+          oportunidades?: string[] | null
+          pontos_fortes?: string[] | null
+          pontuacao_geral: number
+          respostas: Json
+          user_id: string
+        }
+        Update: {
+          atitudes?: number
+          conhecimentos?: number
+          created_at?: string
+          habilidades?: number
+          id?: string
+          oportunidades?: string[] | null
+          pontos_fortes?: string[] | null
+          pontuacao_geral?: number
+          respostas?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      desafios: {
+        Row: {
+          ativo: boolean
+          categoria: string
+          created_at: string
+          descricao: string
+          id: string
+          pontos: number
+          semana: number | null
+          titulo: string
+        }
+        Insert: {
+          ativo?: boolean
+          categoria: string
+          created_at?: string
+          descricao: string
+          id?: string
+          pontos?: number
+          semana?: number | null
+          titulo: string
+        }
+        Update: {
+          ativo?: boolean
+          categoria?: string
+          created_at?: string
+          descricao?: string
+          id?: string
+          pontos?: number
+          semana?: number | null
+          titulo?: string
+        }
+        Relationships: []
+      }
+      desafios_concluidos: {
+        Row: {
+          concluido_em: string
+          desafio_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          concluido_em?: string
+          desafio_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          concluido_em?: string
+          desafio_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "desafios_concluidos_desafio_id_fkey"
+            columns: ["desafio_id"]
+            isOneToOne: false
+            referencedRelation: "desafios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      diario_lider: {
+        Row: {
+          aplicarei: string | null
+          aprendi: string
+          created_at: string
+          habilidade: string | null
+          id: string
+          insight: string | null
+          user_id: string
+        }
+        Insert: {
+          aplicarei?: string | null
+          aprendi: string
+          created_at?: string
+          habilidade?: string | null
+          id?: string
+          insight?: string | null
+          user_id: string
+        }
+        Update: {
+          aplicarei?: string | null
+          aprendi?: string
+          created_at?: string
+          habilidade?: string | null
+          id?: string
+          insight?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pdi: {
+        Row: {
+          acao: string
+          competencia: string
+          created_at: string
+          id: string
+          objetivo: string
+          pontos_creditados: boolean
+          prazo: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          acao: string
+          competencia: string
+          created_at?: string
+          id?: string
+          objetivo: string
+          pontos_creditados?: boolean
+          prazo?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          acao?: string
+          competencia?: string
+          created_at?: string
+          id?: string
+          objetivo?: string
+          pontos_creditados?: boolean
+          prazo?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          area_atuacao: string | null
+          cargo: string | null
+          created_at: string
+          email: string | null
+          empresa: string | null
+          id: string
+          nome: string | null
+          pontuacao: number
+          tempo_experiencia: string | null
+          updated_at: string
+        }
+        Insert: {
+          area_atuacao?: string | null
+          cargo?: string | null
+          created_at?: string
+          email?: string | null
+          empresa?: string | null
+          id: string
+          nome?: string | null
+          pontuacao?: number
+          tempo_experiencia?: string | null
+          updated_at?: string
+        }
+        Update: {
+          area_atuacao?: string | null
+          cargo?: string | null
+          created_at?: string
+          email?: string | null
+          empresa?: string | null
+          id?: string
+          nome?: string | null
+          pontuacao?: number
+          tempo_experiencia?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      testes_lideranca: {
+        Row: {
+          created_at: string
+          id: string
+          perfil_predominante: string
+          pontuacoes: Json
+          respostas: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          perfil_predominante: string
+          pontuacoes: Json
+          respostas: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          perfil_predominante?: string
+          pontuacoes?: Json
+          respostas?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_pontos: {
+        Args: { p_pontos: number; p_user: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
