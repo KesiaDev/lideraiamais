@@ -82,9 +82,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Plataforma para desenvolvimento de liderança com apoio de Inteligência Artificial: CHA, PDI, diário, desafios e assistente IA." },
       { name: "author", content: "LideraIA" },
       { property: "og:title", content: "LideraIA — Laboratório de Liderança com IA" },
-      { property: "og:description", content: "Desenvolva sua liderança com apoio da Inteligência Artificial." },
+      { property: "og:description", content: "Plataforma para desenvolvimento de liderança com apoio de Inteligência Artificial: CHA, PDI, diário, desafios e assistente IA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "LideraIA — Laboratório de Liderança com IA" },
+      { name: "twitter:description", content: "Plataforma para desenvolvimento de liderança com apoio de Inteligência Artificial: CHA, PDI, diário, desafios e assistente IA." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5fc0e1c1-dc00-4211-b292-0731313eec84" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5fc0e1c1-dc00-4211-b292-0731313eec84" },
     ],
     links: [
       {
