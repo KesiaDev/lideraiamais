@@ -1,4 +1,4 @@
-export const CHA_QUESTIONS = {
+﻿export const CHA_QUESTIONS = {
   conhecimentos: [
     "Conheço técnicas de liderança",
     "Conheço estratégias de comunicação",
@@ -16,93 +16,156 @@ export const CHA_QUESTIONS = {
   ],
 };
 
-export type PerfilLideranca =
-  | "Democrático"
-  | "Situacional"
-  | "Servidor"
-  | "Coach"
-  | "Estratégico";
+export type PerfilDISC = "D" | "I" | "S" | "C";
 
-export const PERFIS_DESC: Record<PerfilLideranca, { titulo: string; descricao: string; pontosFortes: string[]; cuidados: string[] }> = {
-  Democrático: {
-    titulo: "Líder Democrático",
+export const PERFIS_DISC: Record<PerfilDISC, {
+  titulo: string;
+  subtitulo: string;
+  cor: string;
+  descricao: string;
+  caracteristicas: string[];
+  pontosFortes: string[];
+  pontosAtencao: string[];
+  comoLider: string;
+  emoji: string;
+}> = {
+  D: {
+    titulo: "Executor",
+    subtitulo: "Perfil D — Dominância",
+    cor: "#ef4444",
+    emoji: "⚡",
     descricao:
-      "Você valoriza a participação da equipe nas decisões, promove o diálogo e busca consenso. Líderes democráticos geram alto engajamento e senso de pertencimento, especialmente em equipes maduras e criativas.",
-    pontosFortes: ["Constrói confiança", "Estimula a criatividade coletiva", "Desenvolve autonomia da equipe"],
-    cuidados: ["Decisões podem demorar em contextos de urgência", "Cuidado para não diluir responsabilidades"],
+      "Você é direto, decidido e orientado a resultados. Como Executor, você não espera as coisas acontecerem — você as faz acontecer. Sua determinação e energia são sua maior força em ambientes de alta pressão.",
+    caracteristicas: ["Direto", "Competitivo", "Rápido", "Orientado para resultados"],
+    pontosFortes: [
+      "Tomada de decisão ágil",
+      "Coragem para enfrentar desafios",
+      "Capacidade de execução sob pressão",
+      "Liderança em situações de crise",
+    ],
+    pontosAtencao: [
+      "Impaciência com processos lentos",
+      "Excesso de cobrança sobre a equipe",
+      "Dificuldade em desacelerar e ouvir",
+    ],
+    comoLider:
+      "Seu perfil predominante é Executor. Você tende a buscar resultados rapidamente, assumir responsabilidades e tomar decisões com agilidade. Como líder, seu desafio será desenvolver escuta ativa, empatia e paciência com pessoas que possuem ritmos diferentes do seu.",
   },
-  Situacional: {
-    titulo: "Líder Situacional",
+  I: {
+    titulo: "Comunicador",
+    subtitulo: "Perfil I — Influência",
+    cor: "#f59e0b",
+    emoji: "✨",
     descricao:
-      "Inspirado em Hersey e Blanchard, você adapta seu estilo (direcionar, treinar, apoiar, delegar) ao nível de maturidade e ao contexto de cada liderado. Ótimo para equipes heterogêneas.",
-    pontosFortes: ["Flexibilidade", "Leitura de contexto apurada", "Desenvolve pessoas no ritmo certo"],
-    cuidados: ["Exige autoconhecimento alto", "Pode parecer inconsistente sem comunicação clara"],
+      "Você é sociável, entusiasmado e naturalmente influente. Como Comunicador, você conecta pessoas, gera energia no ambiente e sabe como engajar equipes em torno de ideias e causas.",
+    caracteristicas: ["Sociável", "Persuasivo", "Entusiasmado", "Otimista"],
+    pontosFortes: [
+      "Comunicação clara e envolvente",
+      "Capacidade de influenciar e inspirar",
+      "Relacionamento interpessoal forte",
+      "Criatividade e pensamento inovador",
+    ],
+    pontosAtencao: [
+      "Falta de organização e foco",
+      "Dispersão entre muitas ideias",
+      "Dificuldade em concluir projetos",
+    ],
+    comoLider:
+      "Seu perfil predominante é Comunicador. Você tende a engajar e inspirar pessoas com facilidade, construindo conexões genuínas. Como líder, seu desafio será desenvolver disciplina operacional e transformar entusiasmo em entrega concreta e consistente.",
   },
-  Servidor: {
-    titulo: "Líder Servidor",
+  S: {
+    titulo: "Planejador",
+    subtitulo: "Perfil S — Estabilidade",
+    cor: "#10b981",
+    emoji: "🤝",
     descricao:
-      "Conceito de Robert Greenleaf: você coloca o desenvolvimento e bem-estar da equipe à frente da sua autopromoção. Cria culturas de confiança, propósito e cooperação.",
-    pontosFortes: ["Empatia profunda", "Foco em propósito e pessoas", "Cultura de confiança"],
-    cuidados: ["Risco de sobrecarregar-se", "Precisa equilibrar empatia com responsabilização"],
+      "Você é colaborativo, paciente e confiável. Como Planejador, você é a âncora da equipe — o tipo de pessoa que todos sabem que podem contar quando precisam de apoio real e consistência.",
+    caracteristicas: ["Colaborativo", "Paciente", "Estável", "Leal"],
+    pontosFortes: [
+      "Trabalho em equipe e cooperação",
+      "Relacionamento e construção de confiança",
+      "Consistência e confiabilidade nas entregas",
+      "Capacidade de escuta profunda",
+    ],
+    pontosAtencao: [
+      "Resistência a mudanças rápidas",
+      "Dificuldade em impor limites",
+      "Tendência a evitar conflitos necessários",
+    ],
+    comoLider:
+      "Seu perfil predominante é Planejador. Você tende a apoiar a equipe com consistência e lealdade, criando ambientes de confiança e cooperação. Como líder, seu desafio será desenvolver assertividade — aprender a dar feedbacks diretos e tomar decisões difíceis mesmo quando gera desconforto.",
   },
-  Coach: {
-    titulo: "Líder Coach",
+  C: {
+    titulo: "Analista",
+    subtitulo: "Perfil C — Conformidade",
+    cor: "#6366f1",
+    emoji: "🔬",
     descricao:
-      "Você lidera fazendo perguntas poderosas, dando feedbacks construtivos e ajudando cada pessoa a encontrar suas próprias respostas. Acelera o desenvolvimento individual.",
-    pontosFortes: ["Desenvolve talentos", "Feedback contínuo", "Estimula autonomia"],
-    cuidados: ["Exige tempo dedicado a 1:1s", "Não substitui decisões executivas firmes"],
-  },
-  Estratégico: {
-    titulo: "Líder Estratégico",
-    descricao:
-      "Você conecta o dia a dia da equipe à visão de longo prazo, prioriza com clareza e toma decisões baseadas em dados e impacto. Essencial para escalar resultados.",
-    pontosFortes: ["Visão sistêmica", "Prioriza com clareza", "Decide com base em impacto"],
-    cuidados: ["Pode parecer distante do operacional", "Cuidado com excesso de planejamento sem execução"],
+      "Você é organizado, detalhista e orientado à qualidade. Como Analista, você pensa antes de agir, questiona antes de decidir e entrega com precisão. Sua força está na profundidade e na excelência.",
+    caracteristicas: ["Organizado", "Detalhista", "Metódico", "Analítico"],
+    pontosFortes: [
+      "Qualidade e precisão nas entregas",
+      "Análise criteriosa de dados e riscos",
+      "Planejamento estruturado",
+      "Identificação de falhas e inconsistências",
+    ],
+    pontosAtencao: [
+      "Perfeccionismo que pode travar a execução",
+      "Dificuldade em delegar tarefas",
+      "Excesso de análise antes de agir",
+    ],
+    comoLider:
+      "Seu perfil predominante é Analista. Você tende a entregar com qualidade e precisão, analisando riscos antes de agir. Como líder, seu desafio será aprender a tomar decisões com informações incompletas e desenvolver tolerância à imperfeição controlada — velocidade e qualidade precisam coexistir.",
   },
 };
 
 export type TestePergunta = {
   id: number;
   texto: string;
-  // peso para cada perfil em uma escala 1-5
-  pesos: Record<PerfilLideranca, number>;
+  perfil: PerfilDISC;
 };
 
-// 15 perguntas baseadas em literatura de liderança. Cada resposta (1-5)
-// soma o valor multiplicado pelo peso ao respectivo perfil.
 export const TESTE_PERGUNTAS: TestePergunta[] = [
-  { id: 1, texto: "Antes de tomar decisões importantes, procuro ouvir a opinião da equipe.", pesos: { Democrático: 1, Situacional: 0.3, Servidor: 0.5, Coach: 0.5, Estratégico: 0.2 } },
-  { id: 2, texto: "Adapto meu estilo de liderança conforme a maturidade de cada liderado.", pesos: { Democrático: 0.2, Situacional: 1, Servidor: 0.3, Coach: 0.5, Estratégico: 0.3 } },
-  { id: 3, texto: "Sinto satisfação em remover obstáculos para que minha equipe avance.", pesos: { Democrático: 0.3, Situacional: 0.3, Servidor: 1, Coach: 0.4, Estratégico: 0.2 } },
-  { id: 4, texto: "Faço mais perguntas do que dou respostas em conversas com liderados.", pesos: { Democrático: 0.4, Situacional: 0.3, Servidor: 0.4, Coach: 1, Estratégico: 0.2 } },
-  { id: 5, texto: "Costumo conectar as tarefas diárias com a visão de longo prazo.", pesos: { Democrático: 0.2, Situacional: 0.3, Servidor: 0.2, Coach: 0.3, Estratégico: 1 } },
-  { id: 6, texto: "Tomo decisões com base em dados e impacto esperado.", pesos: { Democrático: 0.2, Situacional: 0.3, Servidor: 0.1, Coach: 0.2, Estratégico: 1 } },
-  { id: 7, texto: "Prezo pelo desenvolvimento individual de cada pessoa da equipe.", pesos: { Democrático: 0.4, Situacional: 0.5, Servidor: 0.7, Coach: 1, Estratégico: 0.2 } },
-  { id: 8, texto: "Acredito que o líder existe para servir a equipe, não o contrário.", pesos: { Democrático: 0.4, Situacional: 0.2, Servidor: 1, Coach: 0.4, Estratégico: 0.1 } },
-  { id: 9, texto: "Quando alguém está iniciando uma tarefa nova, dou instruções detalhadas.", pesos: { Democrático: 0.1, Situacional: 1, Servidor: 0.3, Coach: 0.3, Estratégico: 0.3 } },
-  { id: 10, texto: "Construo consenso antes de avançar em mudanças importantes.", pesos: { Democrático: 1, Situacional: 0.4, Servidor: 0.5, Coach: 0.3, Estratégico: 0.3 } },
-  { id: 11, texto: "Dou feedback frequente e específico para acelerar o aprendizado.", pesos: { Democrático: 0.4, Situacional: 0.5, Servidor: 0.5, Coach: 1, Estratégico: 0.3 } },
-  { id: 12, texto: "Priorizo iniciativas pelo impacto estratégico, não pela urgência.", pesos: { Democrático: 0.2, Situacional: 0.3, Servidor: 0.1, Coach: 0.2, Estratégico: 1 } },
-  { id: 13, texto: "Costumo delegar quando percebo maturidade suficiente no liderado.", pesos: { Democrático: 0.5, Situacional: 1, Servidor: 0.4, Coach: 0.6, Estratégico: 0.4 } },
-  { id: 14, texto: "Reconheço e celebro publicamente o esforço da equipe.", pesos: { Democrático: 0.7, Situacional: 0.3, Servidor: 0.8, Coach: 0.5, Estratégico: 0.3 } },
-  { id: 15, texto: "Encorajo discordâncias saudáveis para tomar melhores decisões.", pesos: { Democrático: 1, Situacional: 0.4, Servidor: 0.4, Coach: 0.6, Estratégico: 0.5 } },
+  // D — Executor (Dominância)
+  { id: 1,  perfil: "D", texto: "Prefiro tomar decisões rápidas, mesmo sem todas as informações disponíveis." },
+  { id: 2,  perfil: "D", texto: "Em situações de pressão, costumo assumir o controle e liderar o grupo naturalmente." },
+  { id: 3,  perfil: "D", texto: "Metas desafiadoras me motivam muito mais do que tarefas rotineiras e previsíveis." },
+  { id: 4,  perfil: "D", texto: "Não tenho medo de defender minha opinião, mesmo quando ela é impopular." },
+  { id: 5,  perfil: "D", texto: "Me incomoda quando as coisas avançam lentamente ou há excesso de burocracia." },
+  { id: 6,  perfil: "D", texto: "Prefiro agir e corrigir o curso depois a esperar pelo plano perfeito." },
+  // I — Comunicador (Influência)
+  { id: 7,  perfil: "I", texto: "Tenho facilidade em criar conexões com pessoas que acabei de conhecer." },
+  { id: 8,  perfil: "I", texto: "Costumo animar o ambiente com meu entusiasmo e energia positiva." },
+  { id: 9,  perfil: "I", texto: "Gosto de convencer e influenciar pessoas para aderirem a novas ideias." },
+  { id: 10, perfil: "I", texto: "Prefiro trabalhar em equipe a trabalhar sozinho na maioria das situações." },
+  { id: 11, perfil: "I", texto: "Costumo manter o otimismo mesmo quando enfrento adversidades." },
+  { id: 12, perfil: "I", texto: "As pessoas me descrevem como alguém comunicativo, carismático e animado." },
+  // S — Planejador (Estabilidade)
+  { id: 13, perfil: "S", texto: "Prefiro ambientes estáveis e previsíveis para trabalhar com mais qualidade." },
+  { id: 14, perfil: "S", texto: "Tenho paciência para ouvir as pessoas até o fim, sem interromper." },
+  { id: 15, perfil: "S", texto: "Prefiro concluir o que começo antes de iniciar algo novo." },
+  { id: 16, perfil: "S", texto: "Sinto satisfação genuína em apoiar minha equipe, mesmo sem destaque pessoal." },
+  { id: 17, perfil: "S", texto: "Mudanças muito rápidas ou repentinas me causam desconforto." },
+  { id: 18, perfil: "S", texto: "Sou reconhecido pela consistência, lealdade e comprometimento com as pessoas." },
+  // C — Analista (Conformidade)
+  { id: 19, perfil: "C", texto: "Antes de tomar uma decisão, preciso analisar dados e detalhes com cuidado." },
+  { id: 20, perfil: "C", texto: "Erros causados por falta de atenção me incomodam profundamente." },
+  { id: 21, perfil: "C", texto: "Prefiro fazer algo com qualidade do que entregar rápido e com falhas." },
+  { id: 22, perfil: "C", texto: "Sou organizado e sigo processos e procedimentos com disciplina." },
+  { id: 23, perfil: "C", texto: "Questiono ideias e propostas com base em lógica e evidências concretas." },
+  { id: 24, perfil: "C", texto: "Tarefas que exigem precisão e atenção a detalhes me satisfazem muito." },
 ];
 
 export function calcularPerfil(respostas: Record<number, number>) {
-  const totais: Record<PerfilLideranca, number> = {
-    Democrático: 0, Situacional: 0, Servidor: 0, Coach: 0, Estratégico: 0,
-  };
+  const totais: Record<PerfilDISC, number> = { D: 0, I: 0, S: 0, C: 0 };
   for (const q of TESTE_PERGUNTAS) {
-    const r = respostas[q.id] ?? 0;
-    (Object.keys(q.pesos) as PerfilLideranca[]).forEach((p) => {
-      totais[p] += r * q.pesos[p];
-    });
+    totais[q.perfil] += respostas[q.id] ?? 0;
   }
-  const predominante = (Object.entries(totais).sort((a, b) => b[1] - a[1])[0][0]) as PerfilLideranca;
+  const predominante = (Object.entries(totais).sort((a, b) => b[1] - a[1])[0][0]) as PerfilDISC;
   return { totais, predominante };
 }
 
-// GAMIFICACAO
+// GAMIFICAÇÃO
 export const NIVEIS = [
   { nome: "Iniciante", min: 0 },
   { nome: "Líder em Desenvolvimento", min: 50 },

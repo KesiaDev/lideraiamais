@@ -1,7 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { nivelAtual } from "@/lib/leadership-data";
+import { nivelAtual, PERFIS_DISC, type PerfilDISC } from "@/lib/leadership-data";
 import { Trophy, Sparkles, Target, BookOpen, BarChart3, Compass } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
@@ -15,13 +15,20 @@ function Dashboard() {
     queryFn: async () => {
       const { data: u } = await supabase.auth.getUser();
       const uid = u.user!.id;
-      const [profile, cha, ultimoDesafio, pdiAtivo] = await Promise.all([
+      const [profile, cha, ultimoDesafio, pdiAtivo, ultimoTeste] = await Promise.all([
         supabase.from("profiles").select("*").eq("id", uid).maybeSingle(),
         supabase.from("avaliacoes_cha").select("*").eq("user_id", uid).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         supabase.from("desafios_concluidos").select("*, desafios(*)").eq("user_id", uid).order("concluido_em", { ascending: false }).limit(1).maybeSingle(),
         supabase.from("pdi").select("*").eq("user_id", uid).neq("status", "concluido"),
+        supabase.from("testes_lideranca").select("perfil_predominante, pontuacoes").eq("user_id", uid).order("created_at", { ascending: false }).limit(1).maybeSingle(),
       ]);
-      return { profile: profile.data, cha: cha.data, ultimoDesafio: ultimoDesafio.data, pdiAtivo: pdiAtivo.data ?? [] };
+      return {
+        profile: profile.data,
+        cha: cha.data,
+        ultimoDesafio: ultimoDesafio.data,
+        pdiAtivo: pdiAtivo.data ?? [],
+        ultimoTeste: ultimoTeste.data,
+      };
     },
   });
 
@@ -29,14 +36,20 @@ function Dashboard() {
   const { atual, proximo } = nivelAtual(pontos);
   const progresso = proximo ? Math.min(100, ((pontos - atual.min) / (proximo.min - atual.min)) * 100) : 100;
 
+  const perfilDISC = data?.ultimoTeste?.perfil_predominante as PerfilDISC | undefined;
+  const perfil = perfilDISC ? PERFIS_DISC[perfilDISC] : null;
+
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Olá, {data?.profile?.nome ?? "líder"} 👋</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Olá, {data?.profile?.nome ?? "líder"} 👋
+        </h1>
         <p className="text-muted-foreground">Aqui está seu progresso no laboratório de liderança.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
+        {/* Nível */}
         <div className="rounded-2xl border bg-[image:var(--gradient-card)] p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -53,20 +66,40 @@ function Dashboard() {
           </div>
         </div>
 
+        {/* Pontuação */}
         <div className="rounded-2xl border bg-card p-6">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Pontuação</p>
           <p className="mt-1 text-3xl font-bold text-primary">{pontos}</p>
           <p className="text-xs text-muted-foreground">pontos acumulados</p>
         </div>
 
-        <div className="rounded-2xl border bg-card p-6">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Último desafio</p>
-          <p className="mt-1 text-sm font-semibold">{(data?.ultimoDesafio as any)?.desafios?.titulo ?? "Nenhum ainda"}</p>
-          <Link to="/desafios" className="mt-2 inline-block text-xs text-primary hover:underline">Ver desafios →</Link>
+        {/* Perfil DISC */}
+        <div
+          className="rounded-2xl border bg-card p-6"
+          style={perfil ? { borderColor: perfil.cor + "40", background: perfil.cor + "08" } : {}}
+        >
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Perfil DISC</p>
+          {perfil ? (
+            <div className="mt-2 flex items-center gap-3">
+              <span className="text-3xl">{perfil.emoji}</span>
+              <div>
+                <p className="text-xl font-bold" style={{ color: perfil.cor }}>{perfil.titulo}</p>
+                <p className="text-xs text-muted-foreground">{perfil.subtitulo}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-2">
+              <p className="text-sm text-muted-foreground">Nenhum teste realizado</p>
+              <Link to="/teste" className="mt-1 inline-block text-xs text-primary hover:underline">
+                Descobrir meu perfil →
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
+        {/* Resultado CHA */}
         <div className="rounded-2xl border bg-card p-6">
           <div className="mb-3 flex items-center gap-2">
             <BarChart3 className="h-5 w-5 text-primary" />
@@ -82,10 +115,13 @@ function Dashboard() {
               </div>
             </div>
           ) : (
-            <Link to="/cha" className="text-sm text-primary hover:underline">Fazer minha primeira avaliação →</Link>
+            <Link to="/cha" className="text-sm text-primary hover:underline">
+              Fazer minha primeira avaliação →
+            </Link>
           )}
         </div>
 
+        {/* PDI */}
         <div className="rounded-2xl border bg-card p-6">
           <div className="mb-3 flex items-center gap-2">
             <Target className="h-5 w-5 text-primary" />
@@ -101,14 +137,16 @@ function Dashboard() {
               ))}
             </ul>
           ) : (
-            <Link to="/pdi" className="text-sm text-primary hover:underline">Criar meu PDI →</Link>
+            <Link to="/pdi" className="text-sm text-primary hover:underline">
+              Criar meu PDI →
+            </Link>
           )}
         </div>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
         <QuickLink to="/diario" icon={BookOpen} label="Registrar reflexão" />
-        <QuickLink to="/teste" icon={Compass} label="Teste de liderança" />
+        <QuickLink to="/teste" icon={Compass} label={perfil ? "Refazer teste DISC" : "Descobrir perfil DISC"} />
         <QuickLink to="/assistente" icon={Sparkles} label="Falar com Assistente IA" />
       </div>
     </div>
@@ -127,8 +165,14 @@ function Row({ label, value }: { label: string; value: number }) {
 
 function QuickLink({ to, icon: Icon, label }: any) {
   return (
-    <Link to={to} className="group flex items-center justify-between rounded-xl border bg-card p-4 transition hover:border-primary/40 hover:shadow-[var(--shadow-elegant)]">
-      <div className="flex items-center gap-2"><Icon className="h-4 w-4 text-primary" /><span className="text-sm font-medium">{label}</span></div>
+    <Link
+      to={to}
+      className="group flex items-center justify-between rounded-xl border bg-card p-4 transition hover:border-primary/40 hover:shadow-[var(--shadow-elegant)]"
+    >
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-primary" />
+        <span className="text-sm font-medium">{label}</span>
+      </div>
       <span className="text-primary opacity-0 transition group-hover:opacity-100">→</span>
     </Link>
   );
