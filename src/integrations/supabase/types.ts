@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      atividades: {
+        Row: {
+          id: string
+          titulo: string
+          descricao: string | null
+          perguntas: string[]
+          ativa: boolean
+          created_at: string
+          created_by: string | null
+        }
+        Insert: {
+          id?: string
+          titulo: string
+          descricao?: string | null
+          perguntas?: string[]
+          ativa?: boolean
+          created_at?: string
+          created_by?: string | null
+        }
+        Update: {
+          id?: string
+          titulo?: string
+          descricao?: string | null
+          perguntas?: string[]
+          ativa?: boolean
+          created_at?: string
+          created_by?: string | null
+        }
+        Relationships: []
+      }
+      respostas_atividades: {
+        Row: {
+          id: string
+          atividade_id: string
+          user_id: string
+          nome_aluno: string | null
+          respostas: Record<string, string>
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          atividade_id: string
+          user_id: string
+          nome_aluno?: string | null
+          respostas?: Record<string, string>
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          atividade_id?: string
+          user_id?: string
+          nome_aluno?: string | null
+          respostas?: Record<string, string>
+          created_at?: string
+        }
+        Relationships: []
+      }
       avaliacoes_cha: {
         Row: {
           atitudes: number
@@ -192,6 +249,7 @@ export type Database = {
           email: string | null
           empresa: string | null
           id: string
+          is_admin: boolean
           nome: string | null
           pontuacao: number
           tempo_experiencia: string | null
@@ -204,6 +262,7 @@ export type Database = {
           email?: string | null
           empresa?: string | null
           id: string
+          is_admin?: boolean
           nome?: string | null
           pontuacao?: number
           tempo_experiencia?: string | null
@@ -216,6 +275,7 @@ export type Database = {
           email?: string | null
           empresa?: string | null
           id?: string
+          is_admin?: boolean
           nome?: string | null
           pontuacao?: number
           tempo_experiencia?: string | null

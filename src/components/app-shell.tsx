@@ -1,8 +1,10 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { type ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   LayoutDashboard, User, BarChart3, Compass, BookOpen,
   Target, Trophy, Sparkles, Lightbulb, LogOut, Menu,
+  ClipboardList, ShieldCheck,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
@@ -22,6 +24,7 @@ const items = [
   { title: "Meu Diário", url: "/diario", icon: BookOpen },
   { title: "Meu PDI", url: "/pdi", icon: Target },
   { title: "Desafios da Semana", url: "/desafios", icon: Trophy },
+  { title: "Atividades", url: "/atividades", icon: ClipboardList },
   { title: "Assistente IA", url: "/assistente", icon: Sparkles },
   { title: "Liderança e IA", url: "/lideranca-ia", icon: Lightbulb },
 ];
@@ -31,6 +34,17 @@ function NavSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const router = useRouter();
+
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin-sidebar"],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return false;
+      const { data } = await supabase.from("profiles").select("is_admin").eq("id", session.user.id).single();
+      return data?.is_admin ?? false;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -71,6 +85,16 @@ function NavSidebar() {
                   </SidebarMenuItem>
                 );
               })}
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === "/admin"}>
+                    <Link to="/admin" className="flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4" />
+                      {!collapsed && <span>Painel Admin</span>}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
