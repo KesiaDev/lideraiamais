@@ -30,14 +30,14 @@ function CHA() {
     const pontosFortes = allItems.filter((i) => i.nota >= 4).map((i) => i.texto);
     const oportunidades = allItems.filter((i) => i.nota <= 2).map((i) => i.texto);
 
-    const { data: u } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
     const { error } = await supabase.from("avaliacoes_cha").insert({
-      user_id: u.user!.id, respostas: resp, pontuacao_geral: geral,
+      user_id: session!.user.id, respostas: resp, pontuacao_geral: geral,
       conhecimentos: conh, habilidades: hab, atitudes: ati,
       pontos_fortes: pontosFortes, oportunidades,
     });
     if (error) return toast.error(error.message);
-    await supabase.rpc("add_pontos", { p_user: u.user!.id, p_pontos: 10 });
+    await supabase.rpc("add_pontos", { p_user: session!.user.id, p_pontos: 10 });
     setResult({ conh, hab, ati, geral, pontosFortes, oportunidades });
     toast.success("Avaliação salva! +10 pontos");
   }

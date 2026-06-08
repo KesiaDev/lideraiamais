@@ -15,8 +15,8 @@ function Diario() {
   const { data: lista = [] } = useQuery({
     queryKey: ["diario"],
     queryFn: async () => {
-      const { data: u } = await supabase.auth.getUser();
-      const { data } = await supabase.from("diario_lider").select("*").eq("user_id", u.user!.id).order("created_at", { ascending: false });
+      const { data: { session } } = await supabase.auth.getSession();
+      const { data } = await supabase.from("diario_lider").select("*").eq("user_id", session!.user.id).order("created_at", { ascending: false });
       return data ?? [];
     },
   });
@@ -24,10 +24,10 @@ function Diario() {
   async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!f.aprendi.trim()) return toast.error("Preencha pelo menos 'O que aprendi'");
-    const { data: u } = await supabase.auth.getUser();
-    const { error } = await supabase.from("diario_lider").insert({ ...f, user_id: u.user!.id });
+    const { data: { session } } = await supabase.auth.getSession();
+    const { error } = await supabase.from("diario_lider").insert({ ...f, user_id: session!.user.id });
     if (error) return toast.error(error.message);
-    await supabase.rpc("add_pontos", { p_user: u.user!.id, p_pontos: 10 });
+    await supabase.rpc("add_pontos", { p_user: session!.user.id, p_pontos: 10 });
     setF({ aprendi: "", insight: "", aplicarei: "", habilidade: "" });
     qc.invalidateQueries({ queryKey: ["diario"] });
     toast.success("Reflexão salva! +10 pontos");

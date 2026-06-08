@@ -13,20 +13,20 @@ function Desafios() {
   const { data } = useQuery({
     queryKey: ["desafios"],
     queryFn: async () => {
-      const { data: u } = await supabase.auth.getUser();
+      const { data: { session } } = await supabase.auth.getSession();
       const [d, c] = await Promise.all([
         supabase.from("desafios").select("*").eq("ativo", true).order("semana"),
-        supabase.from("desafios_concluidos").select("*").eq("user_id", u.user!.id),
+        supabase.from("desafios_concluidos").select("*").eq("user_id", session!.user.id),
       ]);
       return { desafios: d.data ?? [], concluidos: new Set((c.data ?? []).map((x: any) => x.desafio_id)) };
     },
   });
 
   async function concluir(d: any) {
-    const { data: u } = await supabase.auth.getUser();
-    const { error } = await supabase.from("desafios_concluidos").insert({ user_id: u.user!.id, desafio_id: d.id });
+    const { data: { session } } = await supabase.auth.getSession();
+    const { error } = await supabase.from("desafios_concluidos").insert({ user_id: session!.user.id, desafio_id: d.id });
     if (error) return toast.error(error.message);
-    await supabase.rpc("add_pontos", { p_user: u.user!.id, p_pontos: d.pontos });
+    await supabase.rpc("add_pontos", { p_user: session!.user.id, p_pontos: d.pontos });
     qc.invalidateQueries({ queryKey: ["desafios"] });
     qc.invalidateQueries({ queryKey: ["dashboard"] });
     toast.success(`Desafio concluído! +${d.pontos} pontos`);

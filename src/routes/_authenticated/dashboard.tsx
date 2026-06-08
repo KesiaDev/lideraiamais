@@ -13,8 +13,8 @@ function Dashboard() {
   const { data } = useQuery({
     queryKey: ["dashboard"],
     queryFn: async () => {
-      const { data: u } = await supabase.auth.getUser();
-      const uid = u.user!.id;
+      const { data: { session } } = await supabase.auth.getSession();
+      const uid = session!.user.id;
       const [profile, cha, ultimoDesafio, pdiAtivo, ultimoTeste] = await Promise.all([
         supabase.from("profiles").select("*").eq("id", uid).maybeSingle(),
         supabase.from("avaliacoes_cha").select("*").eq("user_id", uid).order("created_at", { ascending: false }).limit(1).maybeSingle(),

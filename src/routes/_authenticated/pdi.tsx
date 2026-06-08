@@ -20,8 +20,8 @@ function PDI() {
   const { data: itens = [] } = useQuery({
     queryKey: ["pdi"],
     queryFn: async () => {
-      const { data: u } = await supabase.auth.getUser();
-      const { data } = await supabase.from("pdi").select("*").eq("user_id", u.user!.id).order("created_at", { ascending: false });
+      const { data: { session } } = await supabase.auth.getSession();
+      const { data } = await supabase.from("pdi").select("*").eq("user_id", session!.user.id).order("created_at", { ascending: false });
       return data ?? [];
     },
   });
@@ -29,8 +29,8 @@ function PDI() {
   async function add(e: React.FormEvent) {
     e.preventDefault();
     if (!f.competencia || !f.objetivo || !f.acao) return toast.error("Preencha competência, objetivo e ação");
-    const { data: u } = await supabase.auth.getUser();
-    const { error } = await supabase.from("pdi").insert({ ...f, user_id: u.user!.id, prazo: f.prazo || null });
+    const { data: { session } } = await supabase.auth.getSession();
+    const { error } = await supabase.from("pdi").insert({ ...f, user_id: session!.user.id, prazo: f.prazo || null });
     if (error) return toast.error(error.message);
     setF({ competencia: "", objetivo: "", acao: "", prazo: "" });
     qc.invalidateQueries({ queryKey: ["pdi"] });
@@ -38,11 +38,11 @@ function PDI() {
   }
 
   async function updateStatus(item: any, status: string) {
-    const { data: u } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
     await supabase.from("pdi").update({ status }).eq("id", item.id);
     if (status === "concluido" && !item.pontos_creditados) {
       await supabase.from("pdi").update({ pontos_creditados: true }).eq("id", item.id);
-      await supabase.rpc("add_pontos", { p_user: u.user!.id, p_pontos: 30 });
+      await supabase.rpc("add_pontos", { p_user: session!.user.id, p_pontos: 30 });
       toast.success("Ação concluída! +30 pontos");
     }
     qc.invalidateQueries({ queryKey: ["pdi"] });

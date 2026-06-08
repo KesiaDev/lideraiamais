@@ -73,7 +73,7 @@ function Teste() {
     const nomePerfil = PERFIS_DISC[r.predominante].titulo;
     const relatorio = await gerarRelatorioIA(nomePerfil, r.totais);
 
-    const { data: u } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
     if (u.user) {
       await supabase.from("testes_lideranca").insert({
         user_id: u.user.id,

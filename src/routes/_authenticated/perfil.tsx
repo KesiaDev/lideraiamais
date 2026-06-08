@@ -14,8 +14,8 @@ function Perfil() {
 
   useEffect(() => {
     (async () => {
-      const { data: u } = await supabase.auth.getUser();
-      const { data } = await supabase.from("profiles").select("*").eq("id", u.user!.id).maybeSingle();
+      const { data: { session } } = await supabase.auth.getSession();
+      const { data } = await supabase.from("profiles").select("*").eq("id", session!.user.id).maybeSingle();
       if (data) setF({
         nome: data.nome ?? "", empresa: data.empresa ?? "", cargo: data.cargo ?? "",
         tempo_experiencia: data.tempo_experiencia ?? "", area_atuacao: data.area_atuacao ?? "",
@@ -26,8 +26,8 @@ function Perfil() {
   async function save(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const { data: u } = await supabase.auth.getUser();
-    const { error } = await supabase.from("profiles").update(f).eq("id", u.user!.id);
+    const { data: { session } } = await supabase.auth.getSession();
+    const { error } = await supabase.from("profiles").update(f).eq("id", session!.user.id);
     setLoading(false);
     if (error) toast.error(error.message); else toast.success("Perfil salvo!");
   }
