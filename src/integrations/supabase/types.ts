@@ -16,58 +16,40 @@ export type Database = {
     Tables: {
       atividades: {
         Row: {
-          id: string
-          titulo: string
-          descricao: string | null
-          perguntas: string[]
-          ativa: boolean
+          categoria: string
           created_at: string
-          created_by: string | null
+          criado_por: string
+          descricao: string
+          id: string
+          pontos: number
+          prazo: string | null
+          publicada: boolean
+          titulo: string
+          updated_at: string
         }
         Insert: {
-          id?: string
-          titulo: string
-          descricao?: string | null
-          perguntas?: string[]
-          ativa?: boolean
+          categoria: string
           created_at?: string
-          created_by?: string | null
+          criado_por: string
+          descricao: string
+          id?: string
+          pontos?: number
+          prazo?: string | null
+          publicada?: boolean
+          titulo: string
+          updated_at?: string
         }
         Update: {
+          categoria?: string
+          created_at?: string
+          criado_por?: string
+          descricao?: string
           id?: string
+          pontos?: number
+          prazo?: string | null
+          publicada?: boolean
           titulo?: string
-          descricao?: string | null
-          perguntas?: string[]
-          ativa?: boolean
-          created_at?: string
-          created_by?: string | null
-        }
-        Relationships: []
-      }
-      respostas_atividades: {
-        Row: {
-          id: string
-          atividade_id: string
-          user_id: string
-          nome_aluno: string | null
-          respostas: Record<string, string>
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          atividade_id: string
-          user_id: string
-          nome_aluno?: string | null
-          respostas?: Record<string, string>
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          atividade_id?: string
-          user_id?: string
-          nome_aluno?: string | null
-          respostas?: Record<string, string>
-          created_at?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -283,6 +265,50 @@ export type Database = {
         }
         Relationships: []
       }
+      respostas_atividades: {
+        Row: {
+          atividade_id: string
+          avaliado_em: string | null
+          created_at: string
+          feedback: string | null
+          id: string
+          nota: number | null
+          resposta: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          atividade_id: string
+          avaliado_em?: string | null
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          nota?: number | null
+          resposta: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          atividade_id?: string
+          avaliado_em?: string | null
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          nota?: number | null
+          resposta?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "respostas_atividades_atividade_id_fkey"
+            columns: ["atividade_id"]
+            isOneToOne: false
+            referencedRelation: "atividades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       testes_lideranca: {
         Row: {
           created_at: string
@@ -319,6 +345,7 @@ export type Database = {
         Args: { p_pontos: number; p_user: string }
         Returns: undefined
       }
+      is_admin: { Args: { _user: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
