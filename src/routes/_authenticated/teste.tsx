@@ -74,14 +74,14 @@ function Teste() {
     const relatorio = await gerarRelatorioIA(nomePerfil, r.totais);
 
     const { data: { session } } = await supabase.auth.getSession();
-    if (u.user) {
+    if (session?.user) {
       await supabase.from("testes_lideranca").insert({
-        user_id: u.user.id,
+        user_id: session.user.id,
         respostas: resp,
         perfil_predominante: r.predominante,
         pontuacoes: { ...r.totais, relatorio },
       });
-      await supabase.rpc("add_pontos", { p_user: u.user.id, p_pontos: 15 });
+      await supabase.rpc("add_pontos", { p_user: session.user.id, p_pontos: 15 });
       toast.success("+15 pontos conquistados!");
     }
 
