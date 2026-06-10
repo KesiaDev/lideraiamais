@@ -318,7 +318,7 @@ function RespostasTab({ atividadeSelecionada, onSelect }: { atividadeSelecionada
           )}
 
           {respostas && respostas.map((r: any) => {
-            const perguntas: string[] = ativAtual?.perguntas ?? [];
+            const perguntas: string[] = (ativAtual?.perguntas as string[] | undefined) ?? [];
             return (
               <div key={r.id} className="rounded-2xl border bg-card p-5 space-y-4">
                 <div className="flex items-center justify-between">

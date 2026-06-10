@@ -16,58 +16,34 @@ export type Database = {
     Tables: {
       atividades: {
         Row: {
-          id: string
-          titulo: string
-          descricao: string | null
-          perguntas: string[]
           ativa: boolean
           created_at: string
-          created_by: string | null
-        }
-        Insert: {
-          id?: string
-          titulo: string
-          descricao?: string | null
-          perguntas?: string[]
-          ativa?: boolean
-          created_at?: string
-          created_by?: string | null
-        }
-        Update: {
-          id?: string
-          titulo?: string
-          descricao?: string | null
-          perguntas?: string[]
-          ativa?: boolean
-          created_at?: string
-          created_by?: string | null
-        }
-        Relationships: []
-      }
-      respostas_atividades: {
-        Row: {
+          created_by: string
+          descricao: string | null
           id: string
-          atividade_id: string
-          user_id: string
-          nome_aluno: string | null
-          respostas: Record<string, string>
-          created_at: string
+          perguntas: Json
+          titulo: string
+          updated_at: string
         }
         Insert: {
-          id?: string
-          atividade_id: string
-          user_id: string
-          nome_aluno?: string | null
-          respostas?: Record<string, string>
+          ativa?: boolean
           created_at?: string
+          created_by: string
+          descricao?: string | null
+          id?: string
+          perguntas?: Json
+          titulo: string
+          updated_at?: string
         }
         Update: {
-          id?: string
-          atividade_id?: string
-          user_id?: string
-          nome_aluno?: string | null
-          respostas?: Record<string, string>
+          ativa?: boolean
           created_at?: string
+          created_by?: string
+          descricao?: string | null
+          id?: string
+          perguntas?: Json
+          titulo?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -283,6 +259,41 @@ export type Database = {
         }
         Relationships: []
       }
+      respostas_atividades: {
+        Row: {
+          atividade_id: string
+          created_at: string
+          id: string
+          nome_aluno: string | null
+          respostas: Json
+          user_id: string
+        }
+        Insert: {
+          atividade_id: string
+          created_at?: string
+          id?: string
+          nome_aluno?: string | null
+          respostas?: Json
+          user_id: string
+        }
+        Update: {
+          atividade_id?: string
+          created_at?: string
+          id?: string
+          nome_aluno?: string | null
+          respostas?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "respostas_atividades_atividade_id_fkey"
+            columns: ["atividade_id"]
+            isOneToOne: false
+            referencedRelation: "atividades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       testes_lideranca: {
         Row: {
           created_at: string
@@ -319,6 +330,7 @@ export type Database = {
         Args: { p_pontos: number; p_user: string }
         Returns: undefined
       }
+      is_admin: { Args: { _user: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

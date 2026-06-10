@@ -21,7 +21,9 @@ import { Route as AuthenticatedDiarioRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDesafiosRouteImport } from './routes/_authenticated/desafios'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedChaRouteImport } from './routes/_authenticated/cha'
+import { Route as AuthenticatedAtividadesRouteImport } from './routes/_authenticated/atividades'
 import { Route as AuthenticatedAssistenteRouteImport } from './routes/_authenticated/assistente'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -83,16 +85,28 @@ const AuthenticatedChaRoute = AuthenticatedChaRouteImport.update({
   path: '/cha',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAtividadesRoute = AuthenticatedAtividadesRouteImport.update({
+  id: '/atividades',
+  path: '/atividades',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAssistenteRoute = AuthenticatedAssistenteRouteImport.update({
   id: '/assistente',
   path: '/assistente',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/assistente': typeof AuthenticatedAssistenteRoute
+  '/atividades': typeof AuthenticatedAtividadesRoute
   '/cha': typeof AuthenticatedChaRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/desafios': typeof AuthenticatedDesafiosRoute
@@ -106,7 +120,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/assistente': typeof AuthenticatedAssistenteRoute
+  '/atividades': typeof AuthenticatedAtividadesRoute
   '/cha': typeof AuthenticatedChaRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/desafios': typeof AuthenticatedDesafiosRoute
@@ -122,7 +138,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/assistente': typeof AuthenticatedAssistenteRoute
+  '/_authenticated/atividades': typeof AuthenticatedAtividadesRoute
   '/_authenticated/cha': typeof AuthenticatedChaRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/desafios': typeof AuthenticatedDesafiosRoute
@@ -138,7 +156,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/admin'
     | '/assistente'
+    | '/atividades'
     | '/cha'
     | '/dashboard'
     | '/desafios'
@@ -152,7 +172,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/admin'
     | '/assistente'
+    | '/atividades'
     | '/cha'
     | '/dashboard'
     | '/desafios'
@@ -167,7 +189,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/admin'
     | '/_authenticated/assistente'
+    | '/_authenticated/atividades'
     | '/_authenticated/cha'
     | '/_authenticated/dashboard'
     | '/_authenticated/desafios'
@@ -272,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/atividades': {
+      id: '/_authenticated/atividades'
+      path: '/atividades'
+      fullPath: '/atividades'
+      preLoaderRoute: typeof AuthenticatedAtividadesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/assistente': {
       id: '/_authenticated/assistente'
       path: '/assistente'
@@ -279,11 +310,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAssistenteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAssistenteRoute: typeof AuthenticatedAssistenteRoute
+  AuthenticatedAtividadesRoute: typeof AuthenticatedAtividadesRoute
   AuthenticatedChaRoute: typeof AuthenticatedChaRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDesafiosRoute: typeof AuthenticatedDesafiosRoute
@@ -295,7 +335,9 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedAssistenteRoute: AuthenticatedAssistenteRoute,
+  AuthenticatedAtividadesRoute: AuthenticatedAtividadesRoute,
   AuthenticatedChaRoute: AuthenticatedChaRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDesafiosRoute: AuthenticatedDesafiosRoute,
