@@ -16,38 +16,32 @@ export type Database = {
     Tables: {
       atividades: {
         Row: {
-          categoria: string
+          ativa: boolean
           created_at: string
-          criado_por: string
-          descricao: string
+          created_by: string
+          descricao: string | null
           id: string
-          pontos: number
-          prazo: string | null
-          publicada: boolean
+          perguntas: Json
           titulo: string
           updated_at: string
         }
         Insert: {
-          categoria: string
+          ativa?: boolean
           created_at?: string
-          criado_por: string
-          descricao: string
+          created_by: string
+          descricao?: string | null
           id?: string
-          pontos?: number
-          prazo?: string | null
-          publicada?: boolean
+          perguntas?: Json
           titulo: string
           updated_at?: string
         }
         Update: {
-          categoria?: string
+          ativa?: boolean
           created_at?: string
-          criado_por?: string
-          descricao?: string
+          created_by?: string
+          descricao?: string | null
           id?: string
-          pontos?: number
-          prazo?: string | null
-          publicada?: boolean
+          perguntas?: Json
           titulo?: string
           updated_at?: string
         }
@@ -268,35 +262,26 @@ export type Database = {
       respostas_atividades: {
         Row: {
           atividade_id: string
-          avaliado_em: string | null
           created_at: string
-          feedback: string | null
           id: string
-          nota: number | null
-          resposta: string
-          updated_at: string
+          nome_aluno: string | null
+          respostas: Json
           user_id: string
         }
         Insert: {
           atividade_id: string
-          avaliado_em?: string | null
           created_at?: string
-          feedback?: string | null
           id?: string
-          nota?: number | null
-          resposta: string
-          updated_at?: string
+          nome_aluno?: string | null
+          respostas?: Json
           user_id: string
         }
         Update: {
           atividade_id?: string
-          avaliado_em?: string | null
           created_at?: string
-          feedback?: string | null
           id?: string
-          nota?: number | null
-          resposta?: string
-          updated_at?: string
+          nome_aluno?: string | null
+          respostas?: Json
           user_id?: string
         }
         Relationships: [
