@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedTesteRouteImport } from './routes/_authenticated/teste'
+import { Route as AuthenticatedProjetoIntegradorRouteImport } from './routes/_authenticated/projeto-integrador'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as AuthenticatedPdiRouteImport } from './routes/_authenticated/pdi'
 import { Route as AuthenticatedLiderancaIaRouteImport } from './routes/_authenticated/lideranca-ia'
@@ -49,6 +50,12 @@ const AuthenticatedTesteRoute = AuthenticatedTesteRouteImport.update({
   path: '/teste',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProjetoIntegradorRoute =
+  AuthenticatedProjetoIntegradorRouteImport.update({
+    id: '/projeto-integrador',
+    path: '/projeto-integrador',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/lideranca-ia': typeof AuthenticatedLiderancaIaRoute
   '/pdi': typeof AuthenticatedPdiRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/projeto-integrador': typeof AuthenticatedProjetoIntegradorRoute
   '/teste': typeof AuthenticatedTesteRoute
   '/api/chat': typeof ApiChatRoute
 }
@@ -130,6 +138,7 @@ export interface FileRoutesByTo {
   '/lideranca-ia': typeof AuthenticatedLiderancaIaRoute
   '/pdi': typeof AuthenticatedPdiRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/projeto-integrador': typeof AuthenticatedProjetoIntegradorRoute
   '/teste': typeof AuthenticatedTesteRoute
   '/api/chat': typeof ApiChatRoute
 }
@@ -148,6 +157,7 @@ export interface FileRoutesById {
   '/_authenticated/lideranca-ia': typeof AuthenticatedLiderancaIaRoute
   '/_authenticated/pdi': typeof AuthenticatedPdiRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
+  '/_authenticated/projeto-integrador': typeof AuthenticatedProjetoIntegradorRoute
   '/_authenticated/teste': typeof AuthenticatedTesteRoute
   '/api/chat': typeof ApiChatRoute
 }
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/lideranca-ia'
     | '/pdi'
     | '/perfil'
+    | '/projeto-integrador'
     | '/teste'
     | '/api/chat'
   fileRoutesByTo: FileRoutesByTo
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/lideranca-ia'
     | '/pdi'
     | '/perfil'
+    | '/projeto-integrador'
     | '/teste'
     | '/api/chat'
   id:
@@ -199,6 +211,7 @@ export interface FileRouteTypes {
     | '/_authenticated/lideranca-ia'
     | '/_authenticated/pdi'
     | '/_authenticated/perfil'
+    | '/_authenticated/projeto-integrador'
     | '/_authenticated/teste'
     | '/api/chat'
   fileRoutesById: FileRoutesById
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/teste'
       fullPath: '/teste'
       preLoaderRoute: typeof AuthenticatedTesteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/projeto-integrador': {
+      id: '/_authenticated/projeto-integrador'
+      path: '/projeto-integrador'
+      fullPath: '/projeto-integrador'
+      preLoaderRoute: typeof AuthenticatedProjetoIntegradorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/perfil': {
@@ -331,6 +351,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLiderancaIaRoute: typeof AuthenticatedLiderancaIaRoute
   AuthenticatedPdiRoute: typeof AuthenticatedPdiRoute
   AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
+  AuthenticatedProjetoIntegradorRoute: typeof AuthenticatedProjetoIntegradorRoute
   AuthenticatedTesteRoute: typeof AuthenticatedTesteRoute
 }
 
@@ -345,6 +366,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedLiderancaIaRoute: AuthenticatedLiderancaIaRoute,
   AuthenticatedPdiRoute: AuthenticatedPdiRoute,
   AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
+  AuthenticatedProjetoIntegradorRoute: AuthenticatedProjetoIntegradorRoute,
   AuthenticatedTesteRoute: AuthenticatedTesteRoute,
 }
 
