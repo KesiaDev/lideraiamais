@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   LayoutDashboard, User, BarChart3, Compass, BookOpen,
   Target, Trophy, Sparkles, Lightbulb, LogOut, Menu,
-  ClipboardList, ShieldCheck,
+  ClipboardList, ShieldCheck, GraduationCap,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
@@ -25,6 +25,7 @@ const items = [
   { title: "Meu PDI", url: "/pdi", icon: Target },
   { title: "Desafios da Semana", url: "/desafios", icon: Trophy },
   { title: "Atividades", url: "/atividades", icon: ClipboardList },
+  { title: "Projeto Integrador", url: "/projeto-integrador", icon: GraduationCap },
   { title: "Assistente IA", url: "/assistente", icon: Sparkles },
   { title: "Liderança e IA", url: "/lideranca-ia", icon: Lightbulb },
 ];

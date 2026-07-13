@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Plus, Trash2, ChevronDown, ChevronUp, ShieldAlert, ToggleLeft, ToggleRight } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ChevronUp, ShieldAlert, ToggleLeft, ToggleRight, GraduationCap } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({ component: Admin });
 
@@ -45,7 +45,7 @@ function Admin() {
 }
 
 function AdminPanel({ userId }: { userId: string }) {
-  const [aba, setAba] = useState<"atividades" | "respostas">("atividades");
+  const [aba, setAba] = useState<"atividades" | "respostas" | "projetos">("atividades");
   const [atividadeSelecionada, setAtividadeSelecionada] = useState<string | null>(null);
   const [criando, setCriando] = useState(false);
 
@@ -58,7 +58,7 @@ function AdminPanel({ userId }: { userId: string }) {
 
       {/* Tabs */}
       <div className="flex gap-2 border-b">
-        {(["atividades", "respostas"] as const).map((tab) => (
+        {(["atividades", "respostas", "projetos"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => { setAba(tab); setCriando(false); setAtividadeSelecionada(null); }}
@@ -66,7 +66,7 @@ function AdminPanel({ userId }: { userId: string }) {
               aba === tab ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            {tab === "atividades" ? "Gerenciar Atividades" : "Ver Respostas"}
+            {tab === "atividades" ? "Gerenciar Atividades" : tab === "respostas" ? "Ver Respostas" : "Projeto Integrador"}
           </button>
         ))}
       </div>
@@ -77,6 +77,7 @@ function AdminPanel({ userId }: { userId: string }) {
       {aba === "respostas" && (
         <RespostasTab atividadeSelecionada={atividadeSelecionada} onSelect={setAtividadeSelecionada} />
       )}
+      {aba === "projetos" && <ProjetosTab />}
     </div>
   );
 }
@@ -340,6 +341,80 @@ function RespostasTab({ atividadeSelecionada, onSelect }: { atividadeSelecionada
           })}
         </div>
       )}
+    </div>
+  );
+}
+
+// ── Tab: Projeto Integrador (Admin) ────────────────────────
+function ProjetosTab() {
+  const [aberto, setAberto] = useState<string | null>(null);
+
+  const { data: projetos, isLoading } = useQuery({
+    queryKey: ["admin-projetos"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("projeto_integrador")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!data || data.length === 0) return [];
+      const ids = data.map((p) => p.user_id);
+      const { data: perfis } = await supabase
+        .from("profiles")
+        .select("id, nome, email")
+        .in("id", ids);
+      const mapa = new Map((perfis ?? []).map((p: any) => [p.id, p]));
+      return data.map((p: any) => ({ ...p, aluno: mapa.get(p.user_id) }));
+    },
+  });
+
+  if (isLoading) return <p className="text-sm text-muted-foreground">Carregando...</p>;
+  if (!projetos || projetos.length === 0) return (
+    <div className="rounded-2xl border bg-card p-8 text-center">
+      <GraduationCap className="mx-auto h-8 w-8 text-muted-foreground" />
+      <p className="mt-2 text-sm text-muted-foreground">Nenhum aluno concluiu o Projeto Integrador ainda.</p>
+    </div>
+  );
+
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-muted-foreground">{projetos.length} projeto{projetos.length !== 1 ? "s" : ""} concluído{projetos.length !== 1 ? "s" : ""}.</p>
+      {projetos.map((p: any) => {
+        const isOpen = aberto === p.id;
+        return (
+          <div key={p.id} className="rounded-2xl border bg-card">
+            <button
+              onClick={() => setAberto(isOpen ? null : p.id)}
+              className="flex w-full items-center justify-between gap-3 p-4 text-left"
+            >
+              <div>
+                <p className="font-semibold">{p.aluno?.nome ?? "Aluno"}</p>
+                <p className="text-xs text-muted-foreground">{p.aluno?.email} · Enviado em {new Date(p.created_at).toLocaleDateString("pt-BR")}</p>
+              </div>
+              {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+            {isOpen && (
+              <div className="space-y-4 border-t p-5">
+                <ProjetoCampo titulo="1. Perfil de líder hoje" texto={p.perfil_lideranca} />
+                <ProjetoCampo titulo="2. Ponto forte + gap (CHA)" texto={p.cha_destaque} />
+                <ProjetoCampo titulo="3. Foco de desenvolvimento (PDI)" texto={p.plano_desenvolvimento} />
+                <ProjetoCampo titulo="4. Aplicação de IA na liderança" texto={p.aplicacao_ia} />
+                <ProjetoCampo titulo="5. Aprendizado mais transformador" texto={p.aprendizado_transformador} />
+                {p.carta_futuro && <ProjetoCampo titulo="Carta para o Eu do Futuro" texto={p.carta_futuro} />}
+                {p.compromisso && <ProjetoCampo titulo="Compromisso de Liderança" texto={p.compromisso} />}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ProjetoCampo({ titulo, texto }: { titulo: string; texto: string }) {
+  return (
+    <div className="space-y-1">
+      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{titulo}</p>
+      <p className="whitespace-pre-wrap rounded-lg bg-muted/40 px-3 py-2 text-sm">{texto}</p>
     </div>
   );
 }

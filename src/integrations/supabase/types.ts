@@ -259,6 +259,51 @@ export type Database = {
         }
         Relationships: []
       }
+      projeto_integrador: {
+        Row: {
+          aplicacao_ia: string
+          aprendizado_transformador: string
+          carta_futuro: string | null
+          cha_destaque: string
+          compromisso: string | null
+          created_at: string
+          id: string
+          perfil_lideranca: string
+          plano_desenvolvimento: string
+          pontos_creditados: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          aplicacao_ia: string
+          aprendizado_transformador: string
+          carta_futuro?: string | null
+          cha_destaque: string
+          compromisso?: string | null
+          created_at?: string
+          id?: string
+          perfil_lideranca: string
+          plano_desenvolvimento: string
+          pontos_creditados?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          aplicacao_ia?: string
+          aprendizado_transformador?: string
+          carta_futuro?: string | null
+          cha_destaque?: string
+          compromisso?: string | null
+          created_at?: string
+          id?: string
+          perfil_lideranca?: string
+          plano_desenvolvimento?: string
+          pontos_creditados?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       respostas_atividades: {
         Row: {
           atividade_id: string
