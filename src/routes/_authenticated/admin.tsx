@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Plus, Trash2, ChevronDown, ChevronUp, ShieldAlert, ToggleLeft, ToggleRight } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ChevronUp, ShieldAlert, ToggleLeft, ToggleRight, GraduationCap } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({ component: Admin });
 
@@ -45,7 +45,7 @@ function Admin() {
 }
 
 function AdminPanel({ userId }: { userId: string }) {
-  const [aba, setAba] = useState<"atividades" | "respostas">("atividades");
+  const [aba, setAba] = useState<"atividades" | "respostas" | "projetos">("atividades");
   const [atividadeSelecionada, setAtividadeSelecionada] = useState<string | null>(null);
   const [criando, setCriando] = useState(false);
 
@@ -58,7 +58,7 @@ function AdminPanel({ userId }: { userId: string }) {
 
       {/* Tabs */}
       <div className="flex gap-2 border-b">
-        {(["atividades", "respostas"] as const).map((tab) => (
+        {(["atividades", "respostas", "projetos"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => { setAba(tab); setCriando(false); setAtividadeSelecionada(null); }}
@@ -66,7 +66,7 @@ function AdminPanel({ userId }: { userId: string }) {
               aba === tab ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            {tab === "atividades" ? "Gerenciar Atividades" : "Ver Respostas"}
+            {tab === "atividades" ? "Gerenciar Atividades" : tab === "respostas" ? "Ver Respostas" : "Projeto Integrador"}
           </button>
         ))}
       </div>
@@ -77,6 +77,7 @@ function AdminPanel({ userId }: { userId: string }) {
       {aba === "respostas" && (
         <RespostasTab atividadeSelecionada={atividadeSelecionada} onSelect={setAtividadeSelecionada} />
       )}
+      {aba === "projetos" && <ProjetosTab />}
     </div>
   );
 }
