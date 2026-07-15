@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import {
   Sparkles, Compass, BarChart3, Target, Maximize2, Pencil, Trophy,
-  CheckCircle2, Circle, FileDown, ChevronLeft, ChevronRight, Award,
+  CheckCircle2, FileDown, ChevronLeft, ChevronRight, Award,
   Rocket, Heart, Quote, BookOpen, Presentation, Lock,
 } from "lucide-react";
 
