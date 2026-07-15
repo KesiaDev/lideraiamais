@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { PERFIS_DISC, type PerfilDISC } from "@/lib/leadership-data";
-import { Sparkles, Compass, BarChart3, Target, Maximize2, Pencil, Trophy } from "lucide-react";
+import {
+  Sparkles, Compass, BarChart3, Target, Maximize2, Pencil, Trophy,
+  CheckCircle2, Circle, FileDown, ChevronLeft, ChevronRight, Award,
+  BookOpen, Rocket, Heart, GraduationCap, Quote,
+} from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/_authenticated/projeto-integrador")({ component: ProjetoIntegrador });
 
