@@ -271,6 +271,7 @@ export type Database = {
           perfil_lideranca: string
           plano_desenvolvimento: string
           pontos_creditados: boolean
+          respostas: Json
           updated_at: string
           user_id: string
         }
@@ -285,6 +286,7 @@ export type Database = {
           perfil_lideranca: string
           plano_desenvolvimento: string
           pontos_creditados?: boolean
+          respostas?: Json
           updated_at?: string
           user_id: string
         }
@@ -299,6 +301,7 @@ export type Database = {
           perfil_lideranca?: string
           plano_desenvolvimento?: string
           pontos_creditados?: boolean
+          respostas?: Json
           updated_at?: string
           user_id?: string
         }
