@@ -13,74 +13,256 @@ import {
   Sparkles, Compass, BarChart3, Target, Maximize2, Pencil, Trophy,
   CheckCircle2, FileDown, ChevronLeft, ChevronRight, Award,
   Rocket, Heart, Quote, BookOpen, Presentation, Lock,
+  Brain, MessagesSquare, HandHeart, Handshake, Scale, Leaf,
+  Users, Flame, Lightbulb, ShieldCheck,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/projeto-integrador")({ component: ProjetoIntegrador });
 
-type FormState = {
-  perfil_lideranca: string;
-  cha_destaque: string;
-  plano_desenvolvimento: string;
-  aplicacao_ia: string;
-  aprendizado_transformador: string;
-  carta_futuro: string;
-  compromisso: string;
-};
-
-const EMPTY: FormState = {
-  perfil_lideranca: "", cha_destaque: "", plano_desenvolvimento: "",
-  aplicacao_ia: "", aprendizado_transformador: "", carta_futuro: "", compromisso: "",
-};
+type Respostas = Record<string, string>;
 
 type Questao = {
-  key: keyof FormState;
+  key: string;
   n: number;
   capitulo: 1 | 2 | 3 | 4;
+  aula: string;
   titulo: string;
   dica: string;
+  entregaveis: string[]; // sub-itens obrigatórios (tipo checklist mental)
   placeholder: string;
   obrigatoria: boolean;
   minPalavras: number;
   icon: any;
 };
 
-const QUESTOES: Questao[] = [
-  { key: "perfil_lideranca", n: 1, capitulo: 1, obrigatoria: true, minPalavras: 40, icon: Compass,
-    titulo: "Meu perfil de líder hoje",
-    dica: "Como eu me enxergo enquanto líder neste momento? Qual estilo (DISC) mais aparece em mim e em quais situações?",
-    placeholder: "Hoje eu me percebo como um líder..." },
-  { key: "cha_destaque", n: 2, capitulo: 1, obrigatoria: true, minPalavras: 40, icon: BarChart3,
-    titulo: "Meu ponto forte + meu gap do CHA",
-    dica: "Cite um Conhecimento, Habilidade ou Atitude que se destaca — e outro que ainda é uma lacuna a desenvolver.",
-    placeholder: "Meu maior ponto forte é... e o gap que preciso trabalhar é..." },
-  { key: "plano_desenvolvimento", n: 3, capitulo: 2, obrigatoria: true, minPalavras: 50, icon: Target,
-    titulo: "Meu foco de desenvolvimento + critério de evolução",
-    dica: "Qual competência do PDI é prioridade nos próximos 90 dias? Como você vai medir que evoluiu?",
-    placeholder: "Vou focar em desenvolver... e saberei que evoluí quando..." },
-  { key: "aplicacao_ia", n: 4, capitulo: 2, obrigatoria: true, minPalavras: 50, icon: Sparkles,
-    titulo: "Uma aplicação concreta de IA na minha liderança",
-    dica: "Escolha um caso real (feedback, comunicação, conflito, decisão) e descreva como a IA vai te apoiar.",
-    placeholder: "Vou usar IA para me apoiar em..." },
-  { key: "aprendizado_transformador", n: 5, capitulo: 3, obrigatoria: true, minPalavras: 40, icon: Rocket,
-    titulo: "O aprendizado mais transformador do curso",
-    dica: "Uma ideia, ferramenta ou reflexão que mudou seu jeito de liderar — e por quê.",
-    placeholder: "O que mais me transformou foi..." },
-  { key: "carta_futuro", n: 6, capitulo: 4, obrigatoria: false, minPalavras: 40, icon: Heart,
-    titulo: "Carta para o Eu do Futuro",
-    dica: "Escreva algumas linhas para o líder que você quer ser daqui a 1 ano.",
-    placeholder: "Querido eu do futuro..." },
-  { key: "compromisso", n: 7, capitulo: 4, obrigatoria: false, minPalavras: 10, icon: Quote,
-    titulo: "Meu Compromisso de Liderança",
-    dica: "Uma frase-manifesto que resume o líder que você se compromete a ser.",
-    placeholder: "Eu me comprometo a..." },
-];
-
 const CAPITULOS = [
-  { n: 1, titulo: "Diagnóstico", subtitulo: "De onde eu parto", icon: Compass },
-  { n: 2, titulo: "Plano de Ação", subtitulo: "Para onde eu vou", icon: Target },
-  { n: 3, titulo: "Transformação", subtitulo: "O que mudou em mim", icon: Rocket },
-  { n: 4, titulo: "Legado", subtitulo: "O líder que escolho ser", icon: Award },
+  { n: 1, titulo: "Autoconhecimento", subtitulo: "Quem eu sou como líder", icon: Compass, aulas: "Aulas 1-3" },
+  { n: 2, titulo: "Eu Liderando Pessoas", subtitulo: "Como desenvolvo, engajo e resolvo", icon: Users, aulas: "Aulas 5-9" },
+  { n: 3, titulo: "Eu Liderando Organizações", subtitulo: "Decisão, ética e sustentabilidade", icon: Scale, aulas: "Aulas 10-13" },
+  { n: 4, titulo: "IA & Legado", subtitulo: "O líder que escolho ser", icon: Award, aulas: "Síntese final" },
 ] as const;
+
+const QUESTOES: Questao[] = [
+  // ── Capítulo 1 · Autoconhecimento (Aulas 1-3) ─────────────────
+  {
+    key: "estilo_lideranca", n: 1, capitulo: 1, aula: "Aula 1 · Tipologia de líderes", obrigatoria: true, minPalavras: 90, icon: Compass,
+    titulo: "Meu estilo dominante e meu estilo secundário",
+    dica: "Entre os estilos clássicos (autocrático, democrático, liberal) e modernos (situacional, servidor, coach, transformacional), quais dois mais aparecem em você hoje?",
+    entregaveis: [
+      "Nomear o estilo dominante e o secundário",
+      "1 situação real em que o dominante te ajudou",
+      "1 situação real em que ele te atrapalhou",
+      "Que estilo você quer desenvolver e por quê",
+    ],
+    placeholder: "Meu estilo dominante hoje é... e meu secundário é... Uma situação em que...",
+  },
+  {
+    key: "disc_integrado", n: 2, capitulo: 1, aula: "Aula 2 · Inteligência Emocional & DISC", obrigatoria: true, minPalavras: 90, icon: Brain,
+    titulo: "Meu perfil DISC na prática",
+    dica: "Vá além do rótulo (D, I, S ou C): mostre como ele se manifesta em decisões, sob pressão e em relacionamentos.",
+    entregaveis: [
+      "Perfil predominante e nível dos outros 3",
+      "Como ele aparece em decisões do dia a dia",
+      "Como ele aparece sob pressão / conflito",
+      "1 armadilha típica desse perfil que você já viveu",
+    ],
+    placeholder: "Meu perfil predominante é... Em decisões, isso significa que...",
+  },
+  {
+    key: "gatilhos_autogestao", n: 3, capitulo: 1, aula: "Aula 2 · Autogestão emocional", obrigatoria: true, minPalavras: 80, icon: Flame,
+    titulo: "Meus 3 gatilhos emocionais + estratégia de autogestão",
+    dica: "Liste três situações que te tiram do sério no trabalho e a estratégia concreta que você vai usar para não reagir no automático.",
+    entregaveis: [
+      "3 gatilhos claros (o que + com quem + em que contexto)",
+      "Sinal do corpo/emoção que aparece antes da reação",
+      "1 estratégia de autogestão para cada gatilho (pausa, respiração, reframe, adiar resposta...)",
+    ],
+    placeholder: "Gatilho 1: quando... Sinto... Vou reagir com...",
+  },
+  {
+    key: "diag_comunicacao", n: 4, capitulo: 1, aula: "Aula 3 · Comunicação de líder", obrigatoria: true, minPalavras: 80, icon: MessagesSquare,
+    titulo: "Meu diagnóstico de comunicação (verbal, não-verbal e digital)",
+    dica: "Onde sua comunicação hoje é forte e onde ela falha? Cubra os três canais.",
+    entregaveis: [
+      "Um ponto forte e um ponto fraco na comunicação verbal (face a face)",
+      "Um sinal não-verbal seu que ajuda e um que atrapalha",
+      "1 exemplo de mal-entendido digital (WhatsApp/e-mail) que você já causou ou sofreu",
+      "1 ajuste concreto que você vai testar nas próximas 2 semanas",
+    ],
+    placeholder: "No verbal eu sou forte em... e falho em... Meu corpo denuncia que...",
+  },
+  {
+    key: "cnv_reescrita", n: 5, capitulo: 1, aula: "Aula 3 · Comunicação Não Violenta", obrigatoria: true, minPalavras: 70, icon: HandHeart,
+    titulo: "CNV na prática: reescrevendo uma frase pesada",
+    dica: "Escolha uma frase dura que você já disse (ou quase disse) para alguém do trabalho e reescreva usando o modelo Observação-Sentimento-Necessidade-Pedido.",
+    entregaveis: [
+      "A frase original (dura, no automático)",
+      "Observação (fato, sem julgamento)",
+      "Sentimento (o que eu sinto)",
+      "Necessidade (o que eu preciso)",
+      "Pedido claro, específico e realizável",
+    ],
+    placeholder: "Frase original: \"...\"\nReescrita CNV: Quando eu vejo... eu me sinto... porque preciso de... Você poderia...?",
+  },
+
+  // ── Capítulo 2 · Eu Liderando Pessoas (Aulas 5-9) ─────────────
+  {
+    key: "cha_detalhado", n: 6, capitulo: 2, aula: "Aula 5 · Modelo CHA", obrigatoria: true, minPalavras: 100, icon: BarChart3,
+    titulo: "Meu CHA em profundidade",
+    dica: "Vá muito além da nota geral: separe o que você tem e o que te falta em cada dimensão.",
+    entregaveis: [
+      "2 Conhecimentos fortes + 1 Conhecimento a desenvolver",
+      "2 Habilidades fortes + 1 Habilidade a desenvolver",
+      "2 Atitudes fortes + 1 Atitude a desenvolver",
+      "Qual das três dimensões é seu maior gap hoje e por quê",
+    ],
+    placeholder: "Conhecimentos: sei bem sobre... mas preciso aprender... Habilidades: sei fazer... mas ainda travo em... Atitudes: costumo... e falho em...",
+  },
+  {
+    key: "cha_liderado", n: 7, capitulo: 2, aula: "Aula 6 · Desenvolvimento de talentos", obrigatoria: true, minPalavras: 90, icon: Users,
+    titulo: "Análise CHA de um liderado real",
+    dica: "Escolha uma pessoa da sua equipe (ou colega, se você ainda não lidera formalmente) e aplique a lente do CHA nela.",
+    entregaveis: [
+      "Iniciais/apelido e função da pessoa",
+      "O que ela tem de forte (C, H ou A) — dê exemplos",
+      "O gap principal e se é C, H ou A",
+      "1 ação de desenvolvimento coerente com o gap (treinamento, mentoria, coaching ou desafio)",
+    ],
+    placeholder: "Pessoa: J. — analista de... É muito forte em... mas o gap é...",
+  },
+  {
+    key: "pdi_90_dias", n: 8, capitulo: 2, aula: "Aula 6 · PDI real", obrigatoria: true, minPalavras: 110, icon: Target,
+    titulo: "Meu PDI dos próximos 90 dias",
+    dica: "Escolha 3 competências prioritárias, com ações, prazos e indicadores de evolução. Nada genérico.",
+    entregaveis: [
+      "3 competências prioritárias (do CHA / DISC)",
+      "Para cada uma: objetivo, 1-2 ações práticas, prazo e indicador mensurável",
+      "Quem vai te apoiar / cobrar (mentor, gestor, par)",
+      "Marco de revisão aos 30 e 60 dias",
+    ],
+    placeholder: "Competência 1: ... Objetivo: ... Ações: ... Prazo: ... Indicador: ...",
+  },
+  {
+    key: "motivacao_equipe", n: 9, capitulo: 2, aula: "Aula 7 · Motivação e propósito", obrigatoria: true, minPalavras: 90, icon: Rocket,
+    titulo: "Diagnóstico de motivação da equipe",
+    dica: "Olhe para a sua equipe (real ou futura) com honestidade: o que move essas pessoas hoje?",
+    entregaveis: [
+      "Nível geral de engajamento (alto, médio, baixo) e por quê",
+      "1 fator higiênico problemático (salário, ambiente, chefia)",
+      "1 fator motivacional forte (propósito, reconhecimento, autonomia, evolução)",
+      "2 ações concretas de reconhecimento não-financeiro que você vai implementar",
+    ],
+    placeholder: "Hoje a equipe está... Isso acontece porque... Vou implementar...",
+  },
+  {
+    key: "feedback_sbi", n: 10, capitulo: 2, aula: "Aula 8 · Feedback SBI + Feedforward", obrigatoria: true, minPalavras: 100, icon: MessagesSquare,
+    titulo: "Um feedback real estruturado em SBI + Feedforward",
+    dica: "Escolha uma pessoa a quem você precisa dar um feedback difícil (ou merecido positivo) e escreva o roteiro.",
+    entregaveis: [
+      "Contexto: quem, quando, tipo (positivo ou corretivo)",
+      "S – Situação específica",
+      "B – Comportamento observado (sem julgamento)",
+      "I – Impacto gerado (em pessoas, cliente, resultado)",
+      "Feedforward: 1 pedido concreto para o futuro",
+    ],
+    placeholder: "Para: J. Feedback corretivo. Situação: na reunião de terça... Comportamento: você... Impacto: isso fez com que... Pedido para o futuro: ...",
+  },
+  {
+    key: "conflito_ganha_ganha", n: 11, capitulo: 2, aula: "Aula 9 · Negociação e conflitos", obrigatoria: true, minPalavras: 100, icon: Handshake,
+    titulo: "Um conflito real analisado em ganha-ganha",
+    dica: "Descreva um conflito atual ou recente e resolva-o no papel, separando posições de interesses.",
+    entregaveis: [
+      "Descrição breve do conflito (partes envolvidas + gatilho)",
+      "Posição de cada lado (o que cada um DIZ que quer)",
+      "Interesse real de cada lado (o que cada um PRECISA)",
+      "1 alternativa ganha-ganha que atende os interesses dos dois",
+      "Como você conduziria a conversa de mediação (3 passos)",
+    ],
+    placeholder: "Conflito entre... A posição de A é... mas o interesse real é... A posição de B é... o interesse real é... Alternativa ganha-ganha:...",
+  },
+
+  // ── Capítulo 3 · Eu Liderando Organizações (Aulas 10-13) ──────
+  {
+    key: "decisao_incerteza", n: 12, capitulo: 3, aula: "Aula 10 · Decisão em cenários de incerteza", obrigatoria: true, minPalavras: 100, icon: Lightbulb,
+    titulo: "Uma decisão difícil, decidida com método",
+    dica: "Traga uma decisão real que você precisa (ou precisou) tomar com dados incompletos e aplique uma ferramenta.",
+    entregaveis: [
+      "Contexto e por que a decisão é difícil (dados, prazos, interesses)",
+      "2 alternativas em análise com prós e contras",
+      "1 viés cognitivo que estava te empurrando para o lado errado",
+      "Ferramenta usada (matriz de decisão, 5 porquês, pré-mortem, custo x impacto)",
+      "Decisão final + critério de reavaliação",
+    ],
+    placeholder: "Preciso decidir entre... É difícil porque... O viés que me atrapalha é... Usando a matriz... Decisão: ... vou reavaliar em ...",
+  },
+  {
+    key: "etica_diversidade", n: 13, capitulo: 3, aula: "Aula 11 · Ética, diversidade e segurança psicológica", obrigatoria: true, minPalavras: 100, icon: ShieldCheck,
+    titulo: "Meu compromisso com ética, diversidade e segurança psicológica",
+    dica: "Além do discurso: o que você vai fazer, de verdade, para criar um ambiente onde as pessoas possam ser quem são e ainda assim colaborar?",
+    entregaveis: [
+      "1 dilema ético real que você viu (ou viveu) e como agiria hoje",
+      "1 prática concreta para acolher diversidade (contratação, escuta, distribuição de voz)",
+      "1 prática concreta para gerar segurança psicológica (como você reage a erros e discordâncias)",
+      "1 comportamento seu que precisa mudar para ser um líder mais inclusivo",
+    ],
+    placeholder: "Já vi uma situação em que... Hoje eu agiria... Para diversidade, vou... Para segurança psicológica, vou parar de... e começar a...",
+  },
+  {
+    key: "ods_sustentavel", n: 14, capitulo: 3, aula: "Aula 13 · ODS e liderança sustentável", obrigatoria: true, minPalavras: 90, icon: Leaf,
+    titulo: "Meu impacto em ODS e minha liderança sustentável",
+    dica: "Escolha 1 ou 2 Objetivos de Desenvolvimento Sustentável em que seu trabalho realmente toca — e mostre como você evita greenwashing.",
+    entregaveis: [
+      "1-2 ODS diretamente conectados ao seu trabalho / equipe",
+      "1 prática interna (cuidar das pessoas: saúde mental, jornada, equidade)",
+      "1 prática externa (cuidar do entorno: cliente, comunidade, planeta)",
+      "1 armadilha de greenwashing que você compromete-se a evitar",
+    ],
+    placeholder: "Meu trabalho impacta os ODS ... Internamente vou... Externamente vou... A armadilha que me comprometo a evitar é...",
+  },
+
+  // ── Capítulo 4 · IA & Legado ──────────────────────────────────
+  {
+    key: "aplicacoes_ia", n: 15, capitulo: 4, aula: "Síntese · IA aplicada à liderança", obrigatoria: true, minPalavras: 100, icon: Sparkles,
+    titulo: "3 aplicações concretas de IA na minha liderança",
+    dica: "Nada de \"vou usar IA para produtividade\". Escolha três casos reais e descreva o prompt / uso.",
+    entregaveis: [
+      "Caso 1 – Comunicação (ex.: reescrever um feedback em CNV)",
+      "Caso 2 – Desenvolvimento (ex.: gerar plano de PDI, roteiro de 1:1)",
+      "Caso 3 – Decisão (ex.: matriz de risco, pré-mortem, análise de cenários)",
+      "Um limite ético que você define para o uso da IA",
+    ],
+    placeholder: "Caso 1: vou pedir à IA para... com o prompt \"...\". Caso 2: ... Caso 3: ... Meu limite ético: nunca vou...",
+  },
+  {
+    key: "aprendizado_transformador", n: 16, capitulo: 4, aula: "Síntese", obrigatoria: true, minPalavras: 70, icon: Rocket,
+    titulo: "O aprendizado mais transformador do curso",
+    dica: "Uma ideia, ferramenta ou reflexão que mudou seu jeito de liderar — e o que você já fez diferente por causa dela.",
+    entregaveis: [
+      "Qual foi o aprendizado",
+      "Em qual aula/conteúdo ele apareceu",
+      "O que você já mudou (ou vai mudar) no comportamento por causa dele",
+    ],
+    placeholder: "O que mais me transformou foi... Isso apareceu na aula... Desde então venho...",
+  },
+  {
+    key: "carta_futuro", n: 17, capitulo: 4, aula: "Legado", obrigatoria: false, minPalavras: 80, icon: Heart,
+    titulo: "Carta para o Eu do Futuro (1 ano)",
+    dica: "Escreva uma carta ao líder que você quer ser daqui a 12 meses. Fale sobre o que você espera ter conquistado e superado.",
+    entregaveis: [
+      "3 conquistas que você espera ter",
+      "1 medo que você espera ter superado",
+      "1 pedido honesto ao seu eu do futuro",
+    ],
+    placeholder: "Querido eu de daqui a 1 ano...",
+  },
+  {
+    key: "compromisso", n: 18, capitulo: 4, aula: "Manifesto", obrigatoria: false, minPalavras: 15, icon: Quote,
+    titulo: "Meu compromisso-manifesto de liderança",
+    dica: "Uma única frase que resume, com força, o líder que você se compromete a ser.",
+    entregaveis: ["Uma frase curta, autoral, em primeira pessoa"],
+    placeholder: "Eu me comprometo a...",
+  },
+];
 
 function contarPalavras(s: string) {
   return s.trim() ? s.trim().split(/\s+/).length : 0;
@@ -88,7 +270,7 @@ function contarPalavras(s: string) {
 
 function ProjetoIntegrador() {
   const qc = useQueryClient();
-  const [form, setForm] = useState<FormState>(EMPTY);
+  const [form, setForm] = useState<Respostas>({});
   const [editing, setEditing] = useState(false);
   const [presenting, setPresenting] = useState(false);
 
@@ -117,22 +299,35 @@ function ProjetoIntegrador() {
 
   useEffect(() => {
     if (data?.projeto) {
-      setForm({
-        perfil_lideranca: data.projeto.perfil_lideranca ?? "",
-        cha_destaque: data.projeto.cha_destaque ?? "",
-        plano_desenvolvimento: data.projeto.plano_desenvolvimento ?? "",
-        aplicacao_ia: data.projeto.aplicacao_ia ?? "",
+      const respostas: Respostas = (data.projeto.respostas as any) ?? {};
+      // fallback: migrar campos antigos para as novas chaves equivalentes
+      const legacy: Respostas = {
+        estilo_lideranca: data.projeto.perfil_lideranca ?? "",
+        cha_detalhado: data.projeto.cha_destaque ?? "",
+        pdi_90_dias: data.projeto.plano_desenvolvimento ?? "",
+        aplicacoes_ia: data.projeto.aplicacao_ia ?? "",
         aprendizado_transformador: data.projeto.aprendizado_transformador ?? "",
         carta_futuro: data.projeto.carta_futuro ?? "",
         compromisso: data.projeto.compromisso ?? "",
-      });
+      };
+      const merged: Respostas = {};
+      for (const q of QUESTOES) {
+        merged[q.key] = respostas[q.key] ?? legacy[q.key] ?? "";
+      }
+      setForm(merged);
+    } else {
+      // inicializa vazio para todas as chaves
+      const empty: Respostas = {};
+      for (const q of QUESTOES) empty[q.key] = "";
+      setForm(empty);
     }
   }, [data?.projeto]);
 
   const obrigatorias = QUESTOES.filter((q) => q.obrigatoria);
-  const preenchidasObr = obrigatorias.filter((q) => form[q.key].trim().length > 0).length;
-  const preenchidasTotal = QUESTOES.filter((q) => form[q.key].trim().length > 0).length;
-  const canSave = preenchidasObr === obrigatorias.length;
+  const preenchidasObr = obrigatorias.filter((q) => (form[q.key] ?? "").trim().length > 0).length;
+  const preenchidasTotal = QUESTOES.filter((q) => (form[q.key] ?? "").trim().length > 0).length;
+  const atingiramMinimo = obrigatorias.filter((q) => contarPalavras(form[q.key] ?? "") >= q.minPalavras).length;
+  const canSave = preenchidasObr === obrigatorias.length && atingiramMinimo === obrigatorias.length;
   const progresso = Math.round((preenchidasTotal / QUESTOES.length) * 100);
 
   const preRequisitos = useMemo(() => ([
@@ -147,15 +342,23 @@ function ProjetoIntegrador() {
     const jaSalvou = !!data.projeto;
     const creditar = !jaSalvou || !data.projeto?.pontos_creditados;
 
+    const respostas: Respostas = {};
+    for (const q of QUESTOES) {
+      const v = (form[q.key] ?? "").trim();
+      if (v) respostas[q.key] = v;
+    }
+
     const payload = {
       user_id: uid,
-      perfil_lideranca: form.perfil_lideranca.trim(),
-      cha_destaque: form.cha_destaque.trim(),
-      plano_desenvolvimento: form.plano_desenvolvimento.trim(),
-      aplicacao_ia: form.aplicacao_ia.trim(),
-      aprendizado_transformador: form.aprendizado_transformador.trim(),
-      carta_futuro: form.carta_futuro.trim() || null,
-      compromisso: form.compromisso.trim() || null,
+      respostas,
+      // espelha os principais para compatibilidade com telas antigas / admin
+      perfil_lideranca: respostas.estilo_lideranca ?? null,
+      cha_destaque: respostas.cha_detalhado ?? null,
+      plano_desenvolvimento: respostas.pdi_90_dias ?? null,
+      aplicacao_ia: respostas.aplicacoes_ia ?? null,
+      aprendizado_transformador: respostas.aprendizado_transformador ?? null,
+      carta_futuro: respostas.carta_futuro ?? null,
+      compromisso: respostas.compromisso ?? null,
       pontos_creditados: true,
     };
 
@@ -163,8 +366,8 @@ function ProjetoIntegrador() {
     if (error) return toast.error(error.message);
 
     if (creditar) {
-      await supabase.rpc("add_pontos", { p_user: uid, p_pontos: 100 });
-      toast.success("Projeto Integrador concluído! +100 pontos 🎉");
+      await supabase.rpc("add_pontos", { p_user: uid, p_pontos: 200 });
+      toast.success("Projeto Integrador concluído! +200 pontos 🎉");
     } else {
       toast.success("Respostas atualizadas");
     }
@@ -192,13 +395,16 @@ function ProjetoIntegrador() {
         <div className="absolute -bottom-24 -left-10 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
         <div className="relative space-y-6">
           <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em] opacity-90">
-            <Trophy className="h-4 w-4" /> Atividade Final · Aula 16
+            <Trophy className="h-4 w-4" /> Capstone Final · Aula 16 · 18 reflexões
           </div>
           <div className="space-y-3">
-            <h1 className="text-3xl font-bold leading-tight md:text-5xl">Projeto Integrador de Liderança</h1>
+            <h1 className="text-3xl font-bold leading-tight md:text-5xl">
+              Projeto Integrador de Liderança
+            </h1>
             <p className="max-w-2xl text-sm opacity-90 md:text-base">
-              Este é o marco final do curso. Aqui você integra seu <strong>perfil DISC</strong>, sua avaliação <strong>CHA</strong> e
-              seu <strong>PDI</strong> em uma narrativa autoral sobre o líder que você está se tornando — pronta para ser apresentada.
+              O capstone do curso. Você vai integrar <strong>tudo</strong> — DISC, IE, comunicação, CHA, PDI, feedback, conflito,
+              decisão, ética, ODS e IA — em uma entrega autoral, densa e apresentável.
+              São <strong>16 reflexões obrigatórias</strong> (com sub-itens específicos) e 2 bônus. Não é pra fazer em 20 minutos.
             </p>
           </div>
 
@@ -207,7 +413,7 @@ function ProjetoIntegrador() {
               <Badge className="gap-1 border-white/40 bg-white/20 text-primary-foreground hover:bg-white/25">
                 <CheckCircle2 className="h-3.5 w-3.5" /> Projeto concluído
               </Badge>
-              <Badge variant="secondary" className="gap-1">+100 pontos creditados</Badge>
+              <Badge variant="secondary" className="gap-1">+200 pontos creditados</Badge>
               {dataConclusao && (
                 <span className="text-xs opacity-80">
                   Entregue em {dataConclusao.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
@@ -222,7 +428,8 @@ function ProjetoIntegrador() {
               </div>
               <Progress value={progresso} className="h-2 bg-white/20" />
               <p className="text-xs opacity-80">
-                {preenchidasObr}/{obrigatorias.length} obrigatórias · {preenchidasTotal - preenchidasObr}/{QUESTOES.length - obrigatorias.length} bônus
+                {preenchidasObr}/{obrigatorias.length} obrigatórias preenchidas · {atingiramMinimo}/{obrigatorias.length} com profundidade mínima ·
+                {" "}{preenchidasTotal - preenchidasObr}/{QUESTOES.length - obrigatorias.length} bônus
               </p>
             </div>
           )}
@@ -296,15 +503,17 @@ function ProjetoIntegrador() {
             <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
               <BookOpen className="h-4 w-4" /> Como funciona
             </div>
-            <h2 className="mt-2 text-xl font-bold">Sua entrega em 4 capítulos</h2>
+            <h2 className="mt-2 text-xl font-bold">Sua entrega em 4 capítulos · 18 reflexões</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              5 reflexões obrigatórias e 2 bônus. Não há resposta certa — o que importa é a sua verdade.
-              Sugerimos entre 40 e 120 palavras por resposta.
+              16 reflexões obrigatórias e 2 bônus. Cada questão traz uma lista de <strong>entregáveis</strong> —
+              pontos que precisam aparecer na sua resposta. Sem palavras mínimas, sem concluir.
             </p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {CAPITULOS.map((c) => {
                 const questoesDoCap = QUESTOES.filter((q) => q.capitulo === c.n);
-                const done = questoesDoCap.every((q) => !q.obrigatoria || form[q.key].trim().length > 0);
+                const done = questoesDoCap.every((q) => !q.obrigatoria || contarPalavras(form[q.key] ?? "") >= q.minPalavras);
+                const totalObrCap = questoesDoCap.filter((q) => q.obrigatoria).length;
+                const doneObrCap = questoesDoCap.filter((q) => q.obrigatoria && contarPalavras(form[q.key] ?? "") >= q.minPalavras).length;
                 return (
                   <div key={c.n} className="rounded-xl border bg-card/60 p-3">
                     <div className="flex items-center gap-2">
@@ -313,7 +522,7 @@ function ProjetoIntegrador() {
                       </span>
                       <div>
                         <p className="text-sm font-semibold leading-tight">{c.titulo}</p>
-                        <p className="text-[11px] text-muted-foreground">{c.subtitulo}</p>
+                        <p className="text-[11px] text-muted-foreground">{c.aulas} · {doneObrCap}/{totalObrCap} ok</p>
                       </div>
                     </div>
                   </div>
@@ -332,7 +541,7 @@ function ProjetoIntegrador() {
                   </span>
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                      Capítulo {cap.n}
+                      Capítulo {cap.n} · {cap.aulas}
                     </p>
                     <h3 className="text-xl font-bold leading-tight">{cap.titulo}</h3>
                     <p className="text-xs text-muted-foreground">{cap.subtitulo}</p>
@@ -343,7 +552,7 @@ function ProjetoIntegrador() {
                     <CampoQuestao
                       key={q.key}
                       q={q}
-                      value={form[q.key]}
+                      value={form[q.key] ?? ""}
                       onChange={(v) => setForm({ ...form, [q.key]: v })}
                     />
                   ))}
@@ -356,7 +565,9 @@ function ProjetoIntegrador() {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="min-w-[220px] flex-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-medium">{preenchidasObr}/{obrigatorias.length} obrigatórias preenchidas</span>
+                  <span className="font-medium">
+                    {atingiramMinimo}/{obrigatorias.length} obrigatórias com profundidade mínima
+                  </span>
                   <span className="text-muted-foreground">{progresso}%</span>
                 </div>
                 <Progress value={progresso} className="mt-2 h-2" />
@@ -366,10 +577,15 @@ function ProjetoIntegrador() {
                   <Button variant="outline" onClick={() => setEditing(false)}>Cancelar</Button>
                 )}
                 <Button size="lg" disabled={!canSave} onClick={salvar} className="gap-2">
-                  {jaEnviado ? "Salvar alterações" : <>Concluir e ganhar 100 pontos <Trophy className="h-4 w-4" /></>}
+                  {jaEnviado ? "Salvar alterações" : <>Concluir e ganhar 200 pontos <Trophy className="h-4 w-4" /></>}
                 </Button>
               </div>
             </div>
+            {!canSave && (
+              <p className="mt-2 text-[11px] text-muted-foreground">
+                Para concluir, todas as 16 obrigatórias precisam atingir a profundidade mínima sugerida em cada questão.
+              </p>
+            )}
           </div>
         </div>
       )}
@@ -466,14 +682,25 @@ function CampoQuestao({ q, value, onChange }: { q: Questao; value: string; onCha
             ) : (
               <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">Bônus ✨</span>
             )}
+            <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">{q.aula}</span>
           </div>
           <p className="mt-0.5 text-xs text-muted-foreground">{q.dica}</p>
+          {q.entregaveis.length > 0 && (
+            <ul className="mt-2 space-y-0.5 text-[11px] text-muted-foreground">
+              {q.entregaveis.map((e, i) => (
+                <li key={i} className="flex gap-1.5">
+                  <span className="text-primary">•</span>
+                  <span>{e}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <q.icon className="hidden h-5 w-5 shrink-0 text-muted-foreground/60 md:block" />
       </div>
-      <Textarea rows={5} value={value} onChange={(e) => onChange(e.target.value)} placeholder={q.placeholder} className="resize-y" />
+      <Textarea rows={7} value={value} onChange={(e) => onChange(e.target.value)} placeholder={q.placeholder} className="resize-y" />
       <div className="flex items-center justify-between text-[11px]">
-        <span className="text-muted-foreground">Sugerimos ao menos {q.minPalavras} palavras.</span>
+        <span className="text-muted-foreground">Mínimo sugerido: {q.minPalavras} palavras (para atingir profundidade).</span>
         <span className={`font-medium ${preenchida ? (atingiuMinimo ? "text-primary" : "text-amber-600 dark:text-amber-400") : "text-muted-foreground"}`}>
           {palavras} palavras
         </span>
@@ -484,7 +711,7 @@ function CampoQuestao({ q, value, onChange }: { q: Questao; value: string; onCha
 
 // ── Modo Apresentação (slide por slide) ───────
 function ModoApresentacao({ form, nomeAluno, disc, onSair }: {
-  form: FormState; nomeAluno?: string; disc: any; onSair: () => void;
+  form: Respostas; nomeAluno?: string; disc: any; onSair: () => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [idx, setIdx] = useState(0);
@@ -493,29 +720,52 @@ function ModoApresentacao({ form, nomeAluno, disc, onSair }: {
   const hoje = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 
   const slides = useMemo(() => {
-    const base = [
+    const conteudoSlides = QUESTOES
+      .filter((q) => (form[q.key] ?? "").trim().length > 0)
+      .map((q) => ({
+        tipo: "conteudo" as const,
+        kicker: `Capítulo ${q.capitulo} · ${q.aula}`,
+        titulo: q.titulo,
+        texto: form[q.key] ?? "",
+        icon: q.icon,
+      }));
+
+    const divisores = CAPITULOS
+      .filter((c) => QUESTOES.some((q) => q.capitulo === c.n && (form[q.key] ?? "").trim().length > 0))
+      .map((c) => ({
+        tipo: "divisor" as const,
+        capitulo: c.n,
+        titulo: c.titulo,
+        subtitulo: c.subtitulo,
+        aulas: c.aulas,
+        icon: c.icon,
+      }));
+
+    // intercala: divisor de capítulo antes das questões daquele capítulo
+    const intercalado: any[] = [];
+    for (const c of CAPITULOS) {
+      const qs = conteudoSlides.filter((s) => s.kicker.startsWith(`Capítulo ${c.n}`));
+      if (qs.length === 0) continue;
+      intercalado.push(divisores.find((d) => d.capitulo === c.n));
+      intercalado.push(...qs);
+    }
+
+    return [
       {
         tipo: "cover" as const,
-        kicker: "Projeto Integrador de Liderança",
+        kicker: "Capstone · Projeto Integrador de Liderança",
         titulo: "Minha jornada de líder",
         subtitulo: nomeAluno ? `por ${nomeAluno}` : undefined,
         rodape: hoje,
       },
-      ...QUESTOES.filter((q) => form[q.key].trim().length > 0).map((q) => ({
-        tipo: "conteudo" as const,
-        kicker: `Capítulo ${q.capitulo} · Reflexão ${q.n}`,
-        titulo: q.titulo,
-        texto: form[q.key],
-        icon: q.icon,
-      })),
+      ...intercalado,
       {
         tipo: "encerramento" as const,
         kicker: "Obrigado",
-        titulo: form.compromisso?.trim() ? form.compromisso : "É isso que me move.",
+        titulo: (form.compromisso ?? "").trim() ? (form.compromisso ?? "") : "É isso que me move.",
         subtitulo: nomeAluno,
       },
     ];
-    return base;
   }, [form, nomeAluno, hoje]);
 
   const total = slides.length;
@@ -582,6 +832,19 @@ function ModoApresentacao({ form, nomeAluno, disc, onSair }: {
                 </div>
               )}
               <p className="pt-6 text-xs uppercase tracking-widest text-slate-400">{atual.rodape}</p>
+            </div>
+          )}
+
+          {atual.tipo === "divisor" && (
+            <div className="relative space-y-6 text-center">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground/70">
+                Capítulo {atual.capitulo} · {atual.aulas}
+              </p>
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10">
+                <atual.icon className="h-8 w-8 text-primary-foreground" />
+              </div>
+              <h2 className="text-4xl font-bold md:text-6xl">{atual.titulo}</h2>
+              <p className="text-lg text-slate-300 md:text-2xl">{atual.subtitulo}</p>
             </div>
           )}
 
