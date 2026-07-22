@@ -261,45 +261,45 @@ export type Database = {
       }
       projeto_integrador: {
         Row: {
-          aplicacao_ia: string
-          aprendizado_transformador: string
+          aplicacao_ia: string | null
+          aprendizado_transformador: string | null
           carta_futuro: string | null
-          cha_destaque: string
+          cha_destaque: string | null
           compromisso: string | null
           created_at: string
           id: string
-          perfil_lideranca: string
-          plano_desenvolvimento: string
+          perfil_lideranca: string | null
+          plano_desenvolvimento: string | null
           pontos_creditados: boolean
           respostas: Json
           updated_at: string
           user_id: string
         }
         Insert: {
-          aplicacao_ia: string
-          aprendizado_transformador: string
+          aplicacao_ia?: string | null
+          aprendizado_transformador?: string | null
           carta_futuro?: string | null
-          cha_destaque: string
+          cha_destaque?: string | null
           compromisso?: string | null
           created_at?: string
           id?: string
-          perfil_lideranca: string
-          plano_desenvolvimento: string
+          perfil_lideranca?: string | null
+          plano_desenvolvimento?: string | null
           pontos_creditados?: boolean
           respostas?: Json
           updated_at?: string
           user_id: string
         }
         Update: {
-          aplicacao_ia?: string
-          aprendizado_transformador?: string
+          aplicacao_ia?: string | null
+          aprendizado_transformador?: string | null
           carta_futuro?: string | null
-          cha_destaque?: string
+          cha_destaque?: string | null
           compromisso?: string | null
           created_at?: string
           id?: string
-          perfil_lideranca?: string
-          plano_desenvolvimento?: string
+          perfil_lideranca?: string | null
+          plano_desenvolvimento?: string | null
           pontos_creditados?: boolean
           respostas?: Json
           updated_at?: string
