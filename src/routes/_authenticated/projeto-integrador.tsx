@@ -427,7 +427,7 @@ function ProjetoIntegrador() {
               </div>
               <Progress value={progresso} className="h-2 bg-white/20" />
               <p className="text-xs opacity-80">
-                {preenchidasObr}/{obrigatorias.length} obrigatórias preenchidas · {atingiramMinimo}/{obrigatorias.length} com profundidade mínima ·
+                {preenchidasObr}/{obrigatorias.length} obrigatórias preenchidas ·
                 {" "}{preenchidasTotal - preenchidasObr}/{QUESTOES.length - obrigatorias.length} bônus
               </p>
             </div>
@@ -503,16 +503,16 @@ function ProjetoIntegrador() {
               <BookOpen className="h-4 w-4" /> Como funciona
             </div>
             <h2 className="mt-2 text-xl font-bold">Sua entrega em 4 capítulos · 18 reflexões</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              16 reflexões obrigatórias e 2 bônus. Cada questão traz uma lista de <strong>entregáveis</strong> —
-              pontos que precisam aparecer na sua resposta. Sem palavras mínimas, sem concluir.
-            </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                16 reflexões obrigatórias e 2 bônus. Cada questão traz uma lista de <strong>entregáveis</strong> —
+                pontos sugeridos para enriquecer a sua resposta. Você pode salvar a qualquer momento, mesmo sem preencher tudo.
+              </p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {CAPITULOS.map((c) => {
                 const questoesDoCap = QUESTOES.filter((q) => q.capitulo === c.n);
-                const done = questoesDoCap.every((q) => !q.obrigatoria || contarPalavras(form[q.key] ?? "") >= q.minPalavras);
                 const totalObrCap = questoesDoCap.filter((q) => q.obrigatoria).length;
-                const doneObrCap = questoesDoCap.filter((q) => q.obrigatoria && contarPalavras(form[q.key] ?? "") >= q.minPalavras).length;
+                const doneObrCap = questoesDoCap.filter((q) => q.obrigatoria && (form[q.key] ?? "").trim().length > 0).length;
+                const done = doneObrCap === totalObrCap;
                 return (
                   <div key={c.n} className="rounded-xl border bg-card/60 p-3">
                     <div className="flex items-center gap-2">
