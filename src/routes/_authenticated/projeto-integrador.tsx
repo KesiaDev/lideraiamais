@@ -326,8 +326,7 @@ function ProjetoIntegrador() {
   const obrigatorias = QUESTOES.filter((q) => q.obrigatoria);
   const preenchidasObr = obrigatorias.filter((q) => (form[q.key] ?? "").trim().length > 0).length;
   const preenchidasTotal = QUESTOES.filter((q) => (form[q.key] ?? "").trim().length > 0).length;
-  const atingiramMinimo = obrigatorias.filter((q) => contarPalavras(form[q.key] ?? "") >= q.minPalavras).length;
-  const canSave = preenchidasObr === obrigatorias.length && atingiramMinimo === obrigatorias.length;
+  const canSave = preenchidasTotal > 0;
   const progresso = Math.round((preenchidasTotal / QUESTOES.length) * 100);
 
   const preRequisitos = useMemo(() => ([
@@ -428,7 +427,7 @@ function ProjetoIntegrador() {
               </div>
               <Progress value={progresso} className="h-2 bg-white/20" />
               <p className="text-xs opacity-80">
-                {preenchidasObr}/{obrigatorias.length} obrigatórias preenchidas · {atingiramMinimo}/{obrigatorias.length} com profundidade mínima ·
+                {preenchidasObr}/{obrigatorias.length} obrigatórias preenchidas ·
                 {" "}{preenchidasTotal - preenchidasObr}/{QUESTOES.length - obrigatorias.length} bônus
               </p>
             </div>
@@ -504,16 +503,16 @@ function ProjetoIntegrador() {
               <BookOpen className="h-4 w-4" /> Como funciona
             </div>
             <h2 className="mt-2 text-xl font-bold">Sua entrega em 4 capítulos · 18 reflexões</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              16 reflexões obrigatórias e 2 bônus. Cada questão traz uma lista de <strong>entregáveis</strong> —
-              pontos que precisam aparecer na sua resposta. Sem palavras mínimas, sem concluir.
-            </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                16 reflexões obrigatórias e 2 bônus. Cada questão traz uma lista de <strong>entregáveis</strong> —
+                pontos sugeridos para enriquecer a sua resposta. Você pode salvar a qualquer momento, mesmo sem preencher tudo.
+              </p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {CAPITULOS.map((c) => {
                 const questoesDoCap = QUESTOES.filter((q) => q.capitulo === c.n);
-                const done = questoesDoCap.every((q) => !q.obrigatoria || contarPalavras(form[q.key] ?? "") >= q.minPalavras);
                 const totalObrCap = questoesDoCap.filter((q) => q.obrigatoria).length;
-                const doneObrCap = questoesDoCap.filter((q) => q.obrigatoria && contarPalavras(form[q.key] ?? "") >= q.minPalavras).length;
+                const doneObrCap = questoesDoCap.filter((q) => q.obrigatoria && (form[q.key] ?? "").trim().length > 0).length;
+                const done = doneObrCap === totalObrCap;
                 return (
                   <div key={c.n} className="rounded-xl border bg-card/60 p-3">
                     <div className="flex items-center gap-2">
@@ -566,7 +565,7 @@ function ProjetoIntegrador() {
               <div className="min-w-[220px] flex-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-medium">
-                    {atingiramMinimo}/{obrigatorias.length} obrigatórias com profundidade mínima
+                    {preenchidasObr}/{obrigatorias.length} obrigatórias preenchidas
                   </span>
                   <span className="text-muted-foreground">{progresso}%</span>
                 </div>
@@ -583,7 +582,7 @@ function ProjetoIntegrador() {
             </div>
             {!canSave && (
               <p className="mt-2 text-[11px] text-muted-foreground">
-                Para concluir, todas as 16 obrigatórias precisam atingir a profundidade mínima sugerida em cada questão.
+                Preencha pelo menos uma resposta para salvar. Você pode voltar depois e continuar.
               </p>
             )}
           </div>
@@ -666,7 +665,6 @@ function ContextoPDI({ pdi }: { pdi: any[] }) {
 function CampoQuestao({ q, value, onChange }: { q: Questao; value: string; onChange: (v: string) => void }) {
   const palavras = contarPalavras(value);
   const preenchida = value.trim().length > 0;
-  const atingiuMinimo = palavras >= q.minPalavras;
 
   return (
     <div className={`rounded-2xl border bg-card p-6 space-y-3 transition ${preenchida ? "border-primary/40" : ""}`}>
@@ -699,9 +697,8 @@ function CampoQuestao({ q, value, onChange }: { q: Questao; value: string; onCha
         <q.icon className="hidden h-5 w-5 shrink-0 text-muted-foreground/60 md:block" />
       </div>
       <Textarea rows={7} value={value} onChange={(e) => onChange(e.target.value)} placeholder={q.placeholder} className="resize-y" />
-      <div className="flex items-center justify-between text-[11px]">
-        <span className="text-muted-foreground">Mínimo sugerido: {q.minPalavras} palavras (para atingir profundidade).</span>
-        <span className={`font-medium ${preenchida ? (atingiuMinimo ? "text-primary" : "text-amber-600 dark:text-amber-400") : "text-muted-foreground"}`}>
+      <div className="flex items-center justify-end text-[11px]">
+        <span className={`font-medium ${preenchida ? "text-primary" : "text-muted-foreground"}`}>
           {palavras} palavras
         </span>
       </div>
