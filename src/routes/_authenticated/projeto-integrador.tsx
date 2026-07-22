@@ -565,7 +565,7 @@ function ProjetoIntegrador() {
               <div className="min-w-[220px] flex-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-medium">
-                    {atingiramMinimo}/{obrigatorias.length} obrigatórias com profundidade mínima
+                    {preenchidasObr}/{obrigatorias.length} obrigatórias preenchidas
                   </span>
                   <span className="text-muted-foreground">{progresso}%</span>
                 </div>
@@ -582,7 +582,7 @@ function ProjetoIntegrador() {
             </div>
             {!canSave && (
               <p className="mt-2 text-[11px] text-muted-foreground">
-                Para concluir, todas as 16 obrigatórias precisam atingir a profundidade mínima sugerida em cada questão.
+                Preencha pelo menos uma resposta para salvar. Você pode voltar depois e continuar.
               </p>
             )}
           </div>
