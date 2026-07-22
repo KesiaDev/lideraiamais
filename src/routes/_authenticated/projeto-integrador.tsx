@@ -665,7 +665,6 @@ function ContextoPDI({ pdi }: { pdi: any[] }) {
 function CampoQuestao({ q, value, onChange }: { q: Questao; value: string; onChange: (v: string) => void }) {
   const palavras = contarPalavras(value);
   const preenchida = value.trim().length > 0;
-  const atingiuMinimo = palavras >= q.minPalavras;
 
   return (
     <div className={`rounded-2xl border bg-card p-6 space-y-3 transition ${preenchida ? "border-primary/40" : ""}`}>
@@ -698,9 +697,8 @@ function CampoQuestao({ q, value, onChange }: { q: Questao; value: string; onCha
         <q.icon className="hidden h-5 w-5 shrink-0 text-muted-foreground/60 md:block" />
       </div>
       <Textarea rows={7} value={value} onChange={(e) => onChange(e.target.value)} placeholder={q.placeholder} className="resize-y" />
-      <div className="flex items-center justify-between text-[11px]">
-        <span className="text-muted-foreground">Mínimo sugerido: {q.minPalavras} palavras (para atingir profundidade).</span>
-        <span className={`font-medium ${preenchida ? (atingiuMinimo ? "text-primary" : "text-amber-600 dark:text-amber-400") : "text-muted-foreground"}`}>
+      <div className="flex items-center justify-end text-[11px]">
+        <span className={`font-medium ${preenchida ? "text-primary" : "text-muted-foreground"}`}>
           {palavras} palavras
         </span>
       </div>
