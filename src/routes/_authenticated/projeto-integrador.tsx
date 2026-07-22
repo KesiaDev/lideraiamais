@@ -326,8 +326,7 @@ function ProjetoIntegrador() {
   const obrigatorias = QUESTOES.filter((q) => q.obrigatoria);
   const preenchidasObr = obrigatorias.filter((q) => (form[q.key] ?? "").trim().length > 0).length;
   const preenchidasTotal = QUESTOES.filter((q) => (form[q.key] ?? "").trim().length > 0).length;
-  const atingiramMinimo = obrigatorias.filter((q) => contarPalavras(form[q.key] ?? "") >= q.minPalavras).length;
-  const canSave = preenchidasObr === obrigatorias.length && atingiramMinimo === obrigatorias.length;
+  const canSave = preenchidasTotal > 0;
   const progresso = Math.round((preenchidasTotal / QUESTOES.length) * 100);
 
   const preRequisitos = useMemo(() => ([
