@@ -263,11 +263,15 @@ export type Database = {
         Row: {
           aplicacao_ia: string | null
           aprendizado_transformador: string | null
+          avaliado_em: string | null
+          avaliado_por: string | null
           carta_futuro: string | null
           cha_destaque: string | null
           compromisso: string | null
           created_at: string
           id: string
+          nota: number | null
+          observacoes_admin: string | null
           perfil_lideranca: string | null
           plano_desenvolvimento: string | null
           pontos_creditados: boolean
@@ -278,11 +282,15 @@ export type Database = {
         Insert: {
           aplicacao_ia?: string | null
           aprendizado_transformador?: string | null
+          avaliado_em?: string | null
+          avaliado_por?: string | null
           carta_futuro?: string | null
           cha_destaque?: string | null
           compromisso?: string | null
           created_at?: string
           id?: string
+          nota?: number | null
+          observacoes_admin?: string | null
           perfil_lideranca?: string | null
           plano_desenvolvimento?: string | null
           pontos_creditados?: boolean
@@ -293,11 +301,15 @@ export type Database = {
         Update: {
           aplicacao_ia?: string | null
           aprendizado_transformador?: string | null
+          avaliado_em?: string | null
+          avaliado_por?: string | null
           carta_futuro?: string | null
           cha_destaque?: string | null
           compromisso?: string | null
           created_at?: string
           id?: string
+          nota?: number | null
+          observacoes_admin?: string | null
           perfil_lideranca?: string | null
           plano_desenvolvimento?: string | null
           pontos_creditados?: boolean

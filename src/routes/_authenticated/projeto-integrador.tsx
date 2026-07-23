@@ -42,7 +42,7 @@ const CAPITULOS = [
   { n: 4, titulo: "IA & Legado", subtitulo: "O líder que escolho ser", icon: Award, aulas: "Síntese final" },
 ] as const;
 
-const QUESTOES: Questao[] = [
+export const QUESTOES: Questao[] = [
   // ── Capítulo 1 · Autoconhecimento (Aulas 1-3) ─────────────────
   {
     key: "estilo_lideranca", n: 1, capitulo: 1, aula: "Aula 1 · Tipologia de líderes", obrigatoria: true, minPalavras: 90, icon: Compass,

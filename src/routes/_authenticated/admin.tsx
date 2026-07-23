@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Plus, Trash2, ChevronDown, ChevronUp, ShieldAlert, ToggleLeft, ToggleRight, GraduationCap } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ChevronUp, ShieldAlert, ToggleLeft, ToggleRight, GraduationCap, Save, CheckCircle2 } from "lucide-react";
+import { QUESTOES } from "./projeto-integrador";
 
 export const Route = createFileRoute("/_authenticated/admin")({ component: Admin });
 
@@ -394,13 +395,7 @@ function ProjetosTab() {
             </button>
             {isOpen && (
               <div className="space-y-4 border-t p-5">
-                <ProjetoCampo titulo="1. Perfil de líder hoje" texto={p.perfil_lideranca} />
-                <ProjetoCampo titulo="2. Ponto forte + gap (CHA)" texto={p.cha_destaque} />
-                <ProjetoCampo titulo="3. Foco de desenvolvimento (PDI)" texto={p.plano_desenvolvimento} />
-                <ProjetoCampo titulo="4. Aplicação de IA na liderança" texto={p.aplicacao_ia} />
-                <ProjetoCampo titulo="5. Aprendizado mais transformador" texto={p.aprendizado_transformador} />
-                {p.carta_futuro && <ProjetoCampo titulo="Carta para o Eu do Futuro" texto={p.carta_futuro} />}
-                {p.compromisso && <ProjetoCampo titulo="Compromisso de Liderança" texto={p.compromisso} />}
+                <ProjetoDetalhes projeto={p} />
               </div>
             )}
           </div>
@@ -415,6 +410,129 @@ function ProjetoCampo({ titulo, texto }: { titulo: string; texto: string }) {
     <div className="space-y-1">
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{titulo}</p>
       <p className="whitespace-pre-wrap rounded-lg bg-muted/40 px-3 py-2 text-sm">{texto}</p>
+    </div>
+  );
+}
+
+function ProjetoDetalhes({ projeto }: { projeto: any }) {
+  const qc = useQueryClient();
+  const respostas: Record<string, string> = (projeto.respostas as any) ?? {};
+
+  // Legado — se ainda houver respostas antigas nas colunas dedicadas, mostrar
+  const legacy: Record<string, string> = {
+    estilo_lideranca: projeto.perfil_lideranca ?? "",
+    cha_detalhado: projeto.cha_destaque ?? "",
+    pdi_90_dias: projeto.plano_desenvolvimento ?? "",
+    aplicacoes_ia: projeto.aplicacao_ia ?? "",
+    aprendizado_transformador: projeto.aprendizado_transformador ?? "",
+    carta_futuro: projeto.carta_futuro ?? "",
+    compromisso: projeto.compromisso ?? "",
+  };
+  const merged: Record<string, string> = { ...legacy, ...respostas };
+
+  const [nota, setNota] = useState<string>(projeto.nota != null ? String(projeto.nota) : "");
+  const [obs, setObs] = useState<string>(projeto.observacoes_admin ?? "");
+
+  const salvar = useMutation({
+    mutationFn: async () => {
+      const notaNum = nota.trim() === "" ? null : Number(nota.replace(",", "."));
+      if (notaNum !== null && (isNaN(notaNum) || notaNum < 0 || notaNum > 10)) {
+        throw new Error("A nota deve ser um número entre 0 e 10.");
+      }
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error } = await supabase
+        .from("projeto_integrador")
+        .update({
+          nota: notaNum,
+          observacoes_admin: obs.trim() || null,
+          avaliado_em: new Date().toISOString(),
+          avaliado_por: user?.id ?? null,
+        })
+        .eq("id", projeto.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Avaliação salva!");
+      qc.invalidateQueries({ queryKey: ["admin-projetos"] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const capitulos = [1, 2, 3, 4] as const;
+  const totalRespondidas = QUESTOES.filter((q) => (merged[q.key] ?? "").trim().length > 0).length;
+
+  return (
+    <div className="space-y-6">
+      {/* Painel de avaliação */}
+      <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4 space-y-4">
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-primary" />
+          <h3 className="font-semibold text-sm">Avaliação do professor</h3>
+          {projeto.avaliado_em && (
+            <span className="text-xs text-muted-foreground ml-auto">
+              Avaliado em {new Date(projeto.avaliado_em).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+            </span>
+          )}
+        </div>
+        <div className="grid gap-4 sm:grid-cols-[140px_1fr]">
+          <div className="space-y-1.5">
+            <Label htmlFor={`nota-${projeto.id}`} className="text-xs">Nota (0 a 10)</Label>
+            <Input
+              id={`nota-${projeto.id}`}
+              inputMode="decimal"
+              placeholder="Ex: 8.5"
+              value={nota}
+              onChange={(e) => setNota(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor={`obs-${projeto.id}`} className="text-xs">Observações / feedback ao aluno</Label>
+            <Textarea
+              id={`obs-${projeto.id}`}
+              rows={4}
+              placeholder="Pontos fortes, o que aprofundar, sugestões..."
+              value={obs}
+              onChange={(e) => setObs(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="flex justify-end">
+          <Button onClick={() => salvar.mutate()} disabled={salvar.isPending} className="gap-2">
+            <Save className="h-4 w-4" /> {salvar.isPending ? "Salvando..." : "Salvar avaliação"}
+          </Button>
+        </div>
+      </div>
+
+      {/* Respostas */}
+      <div className="space-y-4">
+        <p className="text-xs text-muted-foreground">
+          {totalRespondidas} de {QUESTOES.length} questões respondidas
+        </p>
+        {capitulos.map((cap) => {
+          const qs = QUESTOES.filter((q) => q.capitulo === cap);
+          const respondidas = qs.filter((q) => (merged[q.key] ?? "").trim().length > 0);
+          if (respondidas.length === 0) return null;
+          return (
+            <div key={cap} className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Capítulo {cap} — {respondidas.length}/{qs.length} respondidas
+              </p>
+              {qs.map((q) => {
+                const texto = (merged[q.key] ?? "").trim();
+                if (!texto) return null;
+                return (
+                  <div key={q.key} className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      {q.n}. {q.titulo} <span className="opacity-60">· {q.aula}</span>
+                    </p>
+                    <p className="whitespace-pre-wrap rounded-lg bg-muted/40 px-3 py-2 text-sm">{texto}</p>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
