@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Plus, Trash2, ChevronDown, ChevronUp, ShieldAlert, ToggleLeft, ToggleRight, GraduationCap } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ChevronUp, ShieldAlert, ToggleLeft, ToggleRight, GraduationCap, Save, CheckCircle2 } from "lucide-react";
+import { QUESTOES } from "./projeto-integrador";
 
 export const Route = createFileRoute("/_authenticated/admin")({ component: Admin });
 
