@@ -454,6 +454,41 @@ function ProjetoIntegrador() {
         )}
       </section>
 
+      {/* AVALIAÇÃO DO PROFESSOR ─────────────────────── */}
+      {jaEnviado && data?.projeto?.avaliado_em && (
+        <section className="rounded-2xl border-2 border-primary/30 bg-[image:var(--gradient-hero)] p-[2px] shadow-[var(--shadow-glow)]">
+          <div className="rounded-[calc(1rem-2px)] bg-card p-6 md:p-8 space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <CheckCircle2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Avaliação do professor</h2>
+                  <p className="text-xs text-muted-foreground">
+                    Avaliado em {new Date(data.projeto.avaliado_em).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                </div>
+              </div>
+              {data.projeto.nota != null && (
+                <div className="flex items-baseline gap-1 rounded-xl bg-primary/10 px-4 py-2 text-primary">
+                  <span className="text-3xl font-bold leading-none">{Number(data.projeto.nota).toString().replace(".", ",")}</span>
+                  <span className="text-sm opacity-70">/ 10</span>
+                </div>
+              )}
+            </div>
+            {data.projeto.observacoes_admin && (
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Feedback</p>
+                <p className="whitespace-pre-wrap rounded-xl bg-muted/40 px-4 py-3 text-sm leading-relaxed">
+                  {data.projeto.observacoes_admin}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* AÇÕES QUANDO JÁ ENVIADO ─────────────────────── */}
       {jaEnviado && !editing && (
         <section className="grid gap-4 md:grid-cols-2">
